@@ -15,6 +15,10 @@
 		93C0D1301E88CB8D009FD0E0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 93C0D12E1E88CB8D009FD0E0 /* LaunchScreen.storyboard */; };
 		93C0D13B1E88CB8D009FD0E0 /* STAPullDownControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C0D13A1E88CB8D009FD0E0 /* STAPullDownControllerTests.m */; };
 		93C0D1461E88CB8D009FD0E0 /* STAPullDownControllerUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C0D1451E88CB8D009FD0E0 /* STAPullDownControllerUITests.m */; };
+		93C0D1551E89ACEA009FD0E0 /* STAPullDownViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C0D1541E89ACEA009FD0E0 /* STAPullDownViewController.m */; };
+		93C0D1591E8EBA65009FD0E0 /* UIView+STAUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C0D1581E8EBA65009FD0E0 /* UIView+STAUtils.m */; };
+		93C0D15C1E8F6F3E009FD0E0 /* PullDownView.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C0D15B1E8F6F3E009FD0E0 /* PullDownView.m */; };
+		93C0D15E1E8F6F5A009FD0E0 /* PullDownView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93C0D15D1E8F6F5A009FD0E0 /* PullDownView.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +55,13 @@
 		93C0D1411E88CB8D009FD0E0 /* STAPullDownControllerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = STAPullDownControllerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		93C0D1451E88CB8D009FD0E0 /* STAPullDownControllerUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STAPullDownControllerUITests.m; sourceTree = "<group>"; };
 		93C0D1471E88CB8D009FD0E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		93C0D1531E89ACEA009FD0E0 /* STAPullDownViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STAPullDownViewController.h; sourceTree = "<group>"; };
+		93C0D1541E89ACEA009FD0E0 /* STAPullDownViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STAPullDownViewController.m; sourceTree = "<group>"; };
+		93C0D1571E8EBA65009FD0E0 /* UIView+STAUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+STAUtils.h"; sourceTree = "<group>"; };
+		93C0D1581E8EBA65009FD0E0 /* UIView+STAUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+STAUtils.m"; sourceTree = "<group>"; };
+		93C0D15A1E8F6F3E009FD0E0 /* PullDownView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PullDownView.h; sourceTree = "<group>"; };
+		93C0D15B1E8F6F3E009FD0E0 /* PullDownView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PullDownView.m; sourceTree = "<group>"; };
+		93C0D15D1E8F6F5A009FD0E0 /* PullDownView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PullDownView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +112,7 @@
 		93C0D11F1E88CB8D009FD0E0 /* STAPullDownController */ = {
 			isa = PBXGroup;
 			children = (
+				93C0D1561E8EBA65009FD0E0 /* Utility */,
 				93C0D1231E88CB8D009FD0E0 /* AppDelegate.h */,
 				93C0D1241E88CB8D009FD0E0 /* AppDelegate.m */,
 				93C0D1261E88CB8D009FD0E0 /* ViewController.h */,
@@ -110,6 +122,11 @@
 				93C0D12E1E88CB8D009FD0E0 /* LaunchScreen.storyboard */,
 				93C0D1311E88CB8D009FD0E0 /* Info.plist */,
 				93C0D1201E88CB8D009FD0E0 /* Supporting Files */,
+				93C0D1531E89ACEA009FD0E0 /* STAPullDownViewController.h */,
+				93C0D1541E89ACEA009FD0E0 /* STAPullDownViewController.m */,
+				93C0D15A1E8F6F3E009FD0E0 /* PullDownView.h */,
+				93C0D15B1E8F6F3E009FD0E0 /* PullDownView.m */,
+				93C0D15D1E8F6F5A009FD0E0 /* PullDownView.xib */,
 			);
 			path = STAPullDownController;
 			sourceTree = "<group>";
@@ -138,6 +155,15 @@
 				93C0D1471E88CB8D009FD0E0 /* Info.plist */,
 			);
 			path = STAPullDownControllerUITests;
+			sourceTree = "<group>";
+		};
+		93C0D1561E8EBA65009FD0E0 /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				93C0D1571E8EBA65009FD0E0 /* UIView+STAUtils.h */,
+				93C0D1581E8EBA65009FD0E0 /* UIView+STAUtils.m */,
+			);
+			path = Utility;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -250,6 +276,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				93C0D1301E88CB8D009FD0E0 /* LaunchScreen.storyboard in Resources */,
+				93C0D15E1E8F6F5A009FD0E0 /* PullDownView.xib in Resources */,
 				93C0D12D1E88CB8D009FD0E0 /* Assets.xcassets in Resources */,
 				93C0D12B1E88CB8D009FD0E0 /* Main.storyboard in Resources */,
 			);
@@ -277,7 +304,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				93C0D1281E88CB8D009FD0E0 /* ViewController.m in Sources */,
+				93C0D15C1E8F6F3E009FD0E0 /* PullDownView.m in Sources */,
+				93C0D1591E8EBA65009FD0E0 /* UIView+STAUtils.m in Sources */,
 				93C0D1251E88CB8D009FD0E0 /* AppDelegate.m in Sources */,
+				93C0D1551E89ACEA009FD0E0 /* STAPullDownViewController.m in Sources */,
 				93C0D1221E88CB8D009FD0E0 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
