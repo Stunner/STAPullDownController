@@ -29,18 +29,22 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+//    self.toolbarHeight = 20;
+    
     [[NSBundle mainBundle] loadNibNamed:@"PullDownView"
                                   owner:self
                                 options:nil];
     
     self.moveGestureBegan = NO;
     self.pullDownViewOriginatingAtTop = YES;
+    
+    [self setUpPullDownView];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [self setUpPullDownView];
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -59,7 +63,7 @@
 */
 
 - (void)setUpPullDownView {
-    CGRect pullDownViewFrame = self.pullDownView.bounds;
+    CGRect pullDownViewFrame = self.view.bounds;
     self.initialPullDownViewYPosition = pullDownViewFrame.origin.y - pullDownViewFrame.size.height + 65;
     pullDownViewFrame.origin.y = self.initialPullDownViewYPosition;
     self.pullDownView.frame = pullDownViewFrame;
@@ -82,8 +86,7 @@
 - (void)adjustContentFadingForYPosition:(CGFloat)yPos {
 //    LogTrace(@"%s", __PRETTY_FUNCTION__);
     
-    CGFloat toolbarHeight = self.toolbar.frame.size.height;
-    CGFloat slideDistance = 0 - self.initialPullDownViewYPosition - toolbarHeight;
+    CGFloat slideDistance = 0 - self.initialPullDownViewYPosition - self.toolbarHeight;
 //    self.calculatorKeyboard.alpha = (yPos - self.initialPullDownViewYPosition) / slideDistance;
 //    self.titleLabel.alpha = self.hamburgerButton.alpha = self.settingsButton.alpha = 1 - self.calculatorKeyboard.alpha;
 }
@@ -128,8 +131,7 @@
     
 //    CGFloat adBannerHeight = [(AppDelegate *)[[UIApplication sharedApplication] delegate] bannerViewHeight];
     CGRect newFrame = self.pullDownView.frame;
-    CGFloat toolbarHeight = self.toolbar.frame.size.height;
-    newFrame.origin.y = 0 - /*adBannerHeight -*/ toolbarHeight;
+    newFrame.origin.y = 0 - /*adBannerHeight -*/ self.toolbarHeight;
     self.pullDownView.frame = newFrame;
 //    self.calculatorKeyboard.alpha = 1.0;
 //    self.titleLabel.alpha = self.hamburgerButton.alpha = self.settingsButton.alpha = self.detailLabel1.alpha = self.detailLabel2.alpha = self.pulldownBar.alpha = 0.0;
@@ -143,10 +145,9 @@
     
     NSLog(@"recognizer center: %f self view center: %f", recognizer.view.center.y, self.view.center.y - (48/2));
 //    CGFloat adBannerHeight = [(AppDelegate *)[[UIApplication sharedApplication] delegate] bannerViewHeight];
-    CGFloat toolbarHeight = self.toolbar.frame.size.height;
-    if (recognizer.view.center.y >= self.view.center.y /*- adBannerHeight */- toolbarHeight - (48/2) && translation.y > 0) {
+    if (recognizer.view.center.y >= self.view.center.y /*- adBannerHeight */- self.toolbarHeight && translation.y > 0) {
         [UIView animateWithDuration:0.2 animations:^{
-            [self.pullDownView setFrameY:0 -/* adBannerHeight -*/ toolbarHeight];
+            [self.pullDownView setFrameY:0 -/* adBannerHeight -*/ self.toolbarHeight];
         }];
         return;
     }

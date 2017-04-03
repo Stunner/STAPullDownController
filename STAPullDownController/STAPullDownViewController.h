@@ -13,5 +13,6 @@
 @property (nonatomic, strong) id mainViewController;
 @property (nonatomic, strong) IBOutlet UIView *pullDownView;
 @property (nonatomic, strong) UIView *pullUpView;
+@property (nonatomic, assign) CGFloat toolbarHeight;
 
 @end
