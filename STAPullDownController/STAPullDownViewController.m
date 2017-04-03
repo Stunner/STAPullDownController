@@ -11,7 +11,7 @@
 
 #define kAutoSlideCompletionThreshold 30
 
-@interface STAPullDownViewController ()
+@interface STAPullDownViewController () <UIGestureRecognizerDelegate>
 
 @property (nonatomic, assign) CGFloat initialPullDownViewYPosition;
 @property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
@@ -63,6 +63,17 @@
     self.initialPullDownViewYPosition = pullDownViewFrame.origin.y - pullDownViewFrame.size.height + 65;
     pullDownViewFrame.origin.y = self.initialPullDownViewYPosition;
     self.pullDownView.frame = pullDownViewFrame;
+    
+    self.holdGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+                                                                               action:@selector(calculatorViewHeld:)];
+    self.holdGestureRecognizer.delegate = self;
+    self.holdGestureRecognizer.minimumPressDuration = 0.0;
+    [self.pullDownView addGestureRecognizer:self.holdGestureRecognizer];
+    
+    self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(moveCalculatorView:)];
+    self.panGestureRecognizer.delegate = self;
+    [self.pullDownView addGestureRecognizer:self.panGestureRecognizer];
+    
     [self.view addSubview:self.pullDownView];
 }
 
@@ -196,7 +207,7 @@
                 }
             }];
             [self performSelector:@selector(setMoveGestureBegan:) withObject:@NO afterDelay:0.01];
-            [self performSelector:@selector(impactOccurred) withObject:nil afterDelay:0.18];
+//            [self performSelector:@selector(impactOccurred) withObject:nil afterDelay:0.18];
         }
     } // else
 }
@@ -255,6 +266,20 @@
             }
         }
     }
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
+shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+//    LogTrace(@"%s", __PRETTY_FUNCTION__);
+    
+    if (![gestureRecognizer isKindOfClass:[UITapGestureRecognizer class]] &&
+        ![otherGestureRecognizer isKindOfClass:[UITapGestureRecognizer class]])
+    {
+        return YES;
+    }
+    
+    return NO;
 }
 
 @end
