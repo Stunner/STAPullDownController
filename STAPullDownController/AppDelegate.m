@@ -7,6 +7,8 @@
 //
 
 #import "AppDelegate.h"
+#import "STAPullDownViewController.h"
+#import "ViewController.h"
 
 @interface AppDelegate ()
 
@@ -17,6 +19,17 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+//    STAPullDownViewController *pullDownViewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil]
+//                                                instantiateViewControllerWithIdentifier:@"PullDownViewController"];
+//    pullDownViewController.mainViewController = viewController;
+    
+    ViewController *viewController = [[ViewController alloc] initWithNibName:@"ViewController" bundle:nil];
+    STAPullDownViewController *pullDownViewController = [[STAPullDownViewController alloc] init];
+    pullDownViewController.mainViewController = viewController;
+    
+    self.window.rootViewController = pullDownViewController;
+    
     return YES;
 }
 

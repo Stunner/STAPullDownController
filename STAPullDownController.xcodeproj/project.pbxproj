@@ -19,6 +19,7 @@
 		93C0D1591E8EBA65009FD0E0 /* UIView+STAUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C0D1581E8EBA65009FD0E0 /* UIView+STAUtils.m */; };
 		93C0D15C1E8F6F3E009FD0E0 /* PullDownView.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C0D15B1E8F6F3E009FD0E0 /* PullDownView.m */; };
 		93C0D15E1E8F6F5A009FD0E0 /* PullDownView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93C0D15D1E8F6F5A009FD0E0 /* PullDownView.xib */; };
+		93C0D1601E936066009FD0E0 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93C0D15F1E936066009FD0E0 /* ViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,7 @@
 		93C0D15A1E8F6F3E009FD0E0 /* PullDownView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PullDownView.h; sourceTree = "<group>"; };
 		93C0D15B1E8F6F3E009FD0E0 /* PullDownView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PullDownView.m; sourceTree = "<group>"; };
 		93C0D15D1E8F6F5A009FD0E0 /* PullDownView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PullDownView.xib; sourceTree = "<group>"; };
+		93C0D15F1E936066009FD0E0 /* ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +119,7 @@
 				93C0D1241E88CB8D009FD0E0 /* AppDelegate.m */,
 				93C0D1261E88CB8D009FD0E0 /* ViewController.h */,
 				93C0D1271E88CB8D009FD0E0 /* ViewController.m */,
+				93C0D15F1E936066009FD0E0 /* ViewController.xib */,
 				93C0D1291E88CB8D009FD0E0 /* Main.storyboard */,
 				93C0D12C1E88CB8D009FD0E0 /* Assets.xcassets */,
 				93C0D12E1E88CB8D009FD0E0 /* LaunchScreen.storyboard */,
@@ -275,6 +278,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				93C0D1601E936066009FD0E0 /* ViewController.xib in Resources */,
 				93C0D1301E88CB8D009FD0E0 /* LaunchScreen.storyboard in Resources */,
 				93C0D15E1E8F6F5A009FD0E0 /* PullDownView.xib in Resources */,
 				93C0D12D1E88CB8D009FD0E0 /* Assets.xcassets in Resources */,

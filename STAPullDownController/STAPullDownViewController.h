@@ -10,9 +10,9 @@
 
 @interface STAPullDownViewController : UIViewController
 
-@property (nonatomic, strong) id mainViewController;
+@property (nonatomic, strong) id mainViewController; // must either be UIViewController or UITableViewController
 @property (nonatomic, strong) IBOutlet UIView *pullDownView;
-@property (nonatomic, strong) UIView *pullUpView;
+@property (nonatomic, strong) IBOutlet UIView *pullUpView;
 @property (nonatomic, assign) CGFloat toolbarHeight;
 
 @end

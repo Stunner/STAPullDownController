@@ -31,20 +31,30 @@
     
 //    self.toolbarHeight = 20;
     
+    if (self.mainViewController) {
+        [self addChildViewController:self.mainViewController];
+        if ([self.mainViewController isKindOfClass:[UIViewController class]]) {
+            ((UIViewController *)self.mainViewController).view.frame = self.view.bounds;
+            [self.view addSubview:((UIViewController *)self.mainViewController).view];
+        } else if ([self.mainViewController isKindOfClass:[UITableViewController class]]) {
+            ((UITableViewController *)self.mainViewController).tableView.frame = self.view.bounds;
+            [self.view addSubview:((UITableViewController *)self.mainViewController).tableView];
+        }
+        [self.mainViewController didMoveToParentViewController:self];
+    }
+    
     [[NSBundle mainBundle] loadNibNamed:@"PullDownView"
                                   owner:self
                                 options:nil];
     
     self.moveGestureBegan = NO;
     self.pullDownViewOriginatingAtTop = YES;
-    
-    [self setUpPullDownView];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    
+    [self setUpPullDownView];
 }
 
 - (void)didReceiveMemoryWarning {
