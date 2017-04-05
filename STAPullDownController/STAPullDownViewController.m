@@ -9,6 +9,7 @@
 #import "STAPullDownViewController.h"
 #import "UIView+STAUtils.h"
 
+//TODO: make this configurable
 #define kAutoSlideCompletionThreshold 30
 
 @interface STAPullDownViewController () <UIGestureRecognizerDelegate>
@@ -93,6 +94,7 @@
 
 #pragma mark - Pulldown Calculator Methods
 
+// TODO:  move this outside of library
 - (void)adjustContentFadingForYPosition:(CGFloat)yPos {
 //    LogTrace(@"%s", __PRETTY_FUNCTION__);
     
@@ -101,6 +103,7 @@
 //    self.titleLabel.alpha = self.hamburgerButton.alpha = self.settingsButton.alpha = 1 - self.calculatorKeyboard.alpha;
 }
 
+// TODO: make observable
 - (BOOL)hasPassedAutoSlideThreshold {
     if (self.pullDownViewOriginatingAtTop) {
         CGFloat yDelta = self.pullDownView.frame.origin.y - self.initialPullDownViewYPosition;
@@ -112,6 +115,7 @@
     }
 }
 
+// TODO: make observable
 - (void)calculatorViewReachedTop {
 //    LogTrace(@"%s", __PRETTY_FUNCTION__);
     
@@ -119,6 +123,7 @@
     [self.pullDownView addGestureRecognizer:self.holdGestureRecognizer];
 }
 
+// TODO: make observable
 - (void)calculatorViewReachedBottom {
 //    LogTrace(@"%s", __PRETTY_FUNCTION__);
     
@@ -126,6 +131,7 @@
     [self.pullDownView removeGestureRecognizer:self.holdGestureRecognizer];
 }
 
+// TODO: make overridable
 - (void)calculatorViewMovingUp {
 //    LogTrace(@"%s", __PRETTY_FUNCTION__);
     
@@ -136,6 +142,7 @@
 //    self.titleLabel.alpha = self.hamburgerButton.alpha = self.settingsButton.alpha = self.detailLabel1.alpha = self.detailLabel2.alpha = self.pulldownBar.alpha = 1.0;
 }
 
+// TODO: make overridable
 - (void)calculatorViewMovingDown {
 //    LogTrace(@"%s", __PRETTY_FUNCTION__);
     
@@ -227,6 +234,18 @@
 //    [self.feedbackGenerator impactOccurred];
 //}
 
+- (void)calculatorViewHeldGestureEnded:(UILongPressGestureRecognizer *)recognizer {
+    [UIView animateWithDuration:0.43 delay:0.0 usingSpringWithDamping:0.85 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveLinear animations:^{
+        CGRect newFrame = self.pullDownView.frame;
+        newFrame.origin.y -= 20;
+        self.pullDownView.frame = newFrame;
+        
+        [self adjustContentFadingForYPosition:recognizer.view.frame.origin.y];
+    } completion:^(BOOL finished) {
+        
+    }];
+}
+
 - (void)calculatorViewHeld:(UILongPressGestureRecognizer *)recognizer  {
 //    LogTrace(@"%s", __PRETTY_FUNCTION__);
     
@@ -246,15 +265,7 @@
         [self.pullDownView.layer removeAllAnimations];
     } else if (recognizer.state == UIGestureRecognizerStateEnded) {
         if (self.pullDownViewOriginatingAtTop && ![self hasPassedAutoSlideThreshold]) {
-            [UIView animateWithDuration:0.43 delay:0.0 usingSpringWithDamping:0.85 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveLinear animations:^{
-                CGRect newFrame = self.pullDownView.frame;
-                newFrame.origin.y -= 20;
-                self.pullDownView.frame = newFrame;
-                
-                [self adjustContentFadingForYPosition:recognizer.view.frame.origin.y];
-            } completion:^(BOOL finished) {
-                
-            }];
+            [self calculatorViewHeldGestureEnded:recognizer];
         }
     } else {
         if (recognizer.state == UIGestureRecognizerStateCancelled
@@ -264,15 +275,7 @@
             
             if (!self.moveGestureBegan) {
                 if (self.pullDownViewOriginatingAtTop) {
-                    [UIView animateWithDuration:0.43 delay:0.0 usingSpringWithDamping:0.85 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveLinear animations:^{
-                        CGRect newFrame = self.pullDownView.frame;
-                        newFrame.origin.y -= 20;
-                        self.pullDownView.frame = newFrame;
-                        
-                        [self adjustContentFadingForYPosition:recognizer.view.frame.origin.y];
-                    } completion:^(BOOL finished) {
-                        
-                    }];
+                    [self calculatorViewHeldGestureEnded:recognizer];
                 }
             }
         }
