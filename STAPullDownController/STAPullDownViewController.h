@@ -12,7 +12,9 @@
 
 @property (nonatomic, strong) id mainViewController; // must either be UIViewController or UITableViewController
 @property (nonatomic, strong) IBOutlet UIView *pullDownView;
+@property (nonatomic, assign) CGFloat pullDownViewOffsetOverlap;
 @property (nonatomic, strong) IBOutlet UIView *pullUpView;
+@property (nonatomic, assign) CGFloat pullUpViewOffsetOverlap;
 @property (nonatomic, assign) CGFloat toolbarHeight;
 
 @end

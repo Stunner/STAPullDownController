@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		932FC1891E98A000005D77B1 /* UIView+Orientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 932FC1881E98A000005D77B1 /* UIView+Orientation.m */; };
 		93C0D1221E88CB8D009FD0E0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C0D1211E88CB8D009FD0E0 /* main.m */; };
 		93C0D1251E88CB8D009FD0E0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C0D1241E88CB8D009FD0E0 /* AppDelegate.m */; };
 		93C0D1281E88CB8D009FD0E0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C0D1271E88CB8D009FD0E0 /* ViewController.m */; };
@@ -40,6 +41,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		932FC1871E98A000005D77B1 /* UIView+Orientation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Orientation.h"; sourceTree = "<group>"; };
+		932FC1881E98A000005D77B1 /* UIView+Orientation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Orientation.m"; sourceTree = "<group>"; };
 		93C0D11D1E88CB8D009FD0E0 /* STAPullDownController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = STAPullDownController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93C0D1211E88CB8D009FD0E0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		93C0D1231E88CB8D009FD0E0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -163,6 +166,8 @@
 		93C0D1561E8EBA65009FD0E0 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				932FC1871E98A000005D77B1 /* UIView+Orientation.h */,
+				932FC1881E98A000005D77B1 /* UIView+Orientation.m */,
 				93C0D1571E8EBA65009FD0E0 /* UIView+STAUtils.h */,
 				93C0D1581E8EBA65009FD0E0 /* UIView+STAUtils.m */,
 			);
@@ -308,6 +313,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				93C0D1281E88CB8D009FD0E0 /* ViewController.m in Sources */,
+				932FC1891E98A000005D77B1 /* UIView+Orientation.m in Sources */,
 				93C0D15C1E8F6F3E009FD0E0 /* PullDownView.m in Sources */,
 				93C0D1591E8EBA65009FD0E0 /* UIView+STAUtils.m in Sources */,
 				93C0D1251E88CB8D009FD0E0 /* AppDelegate.m in Sources */,
@@ -552,6 +558,7 @@
 				93C0D14C1E88CB8D009FD0E0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		93C0D14D1E88CB8D009FD0E0 /* Build configuration list for PBXNativeTarget "STAPullDownControllerTests" */ = {
 			isa = XCConfigurationList;
@@ -560,6 +567,7 @@
 				93C0D14F1E88CB8D009FD0E0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		93C0D1501E88CB8D009FD0E0 /* Build configuration list for PBXNativeTarget "STAPullDownControllerUITests" */ = {
 			isa = XCConfigurationList;
@@ -568,6 +576,7 @@
 				93C0D1521E88CB8D009FD0E0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
