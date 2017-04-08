@@ -7,11 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "STAPullableView.h"
 
 @interface STAPullDownViewController : UIViewController
 
 @property (nonatomic, strong) id mainViewController; // must either be UIViewController or UITableViewController
-@property (nonatomic, strong) IBOutlet UIView *pullDownView;
+@property (nonatomic, strong) IBOutlet STAPullableView *pullDownView;
 @property (nonatomic, assign) CGFloat pullDownViewOffsetOverlap;
 @property (nonatomic, strong) IBOutlet UIView *pullUpView;
 @property (nonatomic, assign) CGFloat pullUpViewOffsetOverlap;

@@ -78,13 +78,13 @@
         
         // Place code here to perform animations during the rotation.
         // You can pass nil or leave this block empty if not necessary.
-        self.pullDownView.frame = [self setUpPullDownViewFrame];
+        [self.pullDownView setupWithBounds:self.view.bounds];
         
     } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
         
         // Code here will execute after the rotation has finished.
         // Equivalent to placing it in the deprecated method -[didRotateFromInterfaceOrientation:]
-        self.pullDownView.frame = [self setUpPullDownViewFrame];
+        [self.pullDownView setupWithBounds:self.view.bounds];
         
     }];
 }
@@ -99,16 +99,9 @@
 }
 */
 
-- (CGRect)setUpPullDownViewFrame {
-    CGRect pullDownViewFrame = self.view.bounds;
-    self.initialPullDownViewYPosition = pullDownViewFrame.origin.y - pullDownViewFrame.size.height + self.pullDownViewOffsetOverlap;
-    pullDownViewFrame.origin.y = self.initialPullDownViewYPosition;
-    return pullDownViewFrame;
-}
-
 - (void)setUpPullDownView {
     
-    self.pullDownView.frame = [self setUpPullDownViewFrame];
+    [self.pullDownView setupWithBounds:self.view.bounds];
     
     self.holdGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
                                                                                action:@selector(calculatorViewHeld:)];
@@ -125,19 +118,10 @@
 
 #pragma mark - Pulldown Calculator Methods
 
-// TODO:  move this outside of library
-- (void)adjustContentFadingForYPosition:(CGFloat)yPos {
-//    LogTrace(@"%s", __PRETTY_FUNCTION__);
-    
-    CGFloat slideDistance = 0 - self.initialPullDownViewYPosition - self.toolbarHeight;
-//    self.calculatorKeyboard.alpha = (yPos - self.initialPullDownViewYPosition) / slideDistance;
-//    self.titleLabel.alpha = self.hamburgerButton.alpha = self.settingsButton.alpha = 1 - self.calculatorKeyboard.alpha;
-}
-
 // TODO: make observable
 - (BOOL)hasPassedAutoSlideThreshold {
     if (self.pullDownViewOriginatingAtTop) {
-        CGFloat yDelta = self.pullDownView.frame.origin.y - self.initialPullDownViewYPosition;
+        CGFloat yDelta = self.pullDownView.frame.origin.y - self.pullDownView.initialYPosition;
         return yDelta >= kAutoSlideCompletionThreshold;
     } else {
 //        CGFloat adBannerHeight = [(AppDelegate *)[[UIApplication sharedApplication] delegate] bannerViewHeight];
@@ -162,29 +146,6 @@
     [self.pullDownView removeGestureRecognizer:self.holdGestureRecognizer];
 }
 
-// TODO: make overridable
-- (void)calculatorViewMovingUp {
-//    LogTrace(@"%s", __PRETTY_FUNCTION__);
-    
-    CGRect newFrame = self.pullDownView.frame;
-    newFrame.origin.y = self.initialPullDownViewYPosition;
-    self.pullDownView.frame = newFrame;
-//    self.calculatorKeyboard.alpha = 0.0;
-//    self.titleLabel.alpha = self.hamburgerButton.alpha = self.settingsButton.alpha = self.detailLabel1.alpha = self.detailLabel2.alpha = self.pulldownBar.alpha = 1.0;
-}
-
-// TODO: make overridable
-- (void)calculatorViewMovingDown {
-//    LogTrace(@"%s", __PRETTY_FUNCTION__);
-    
-//    CGFloat adBannerHeight = [(AppDelegate *)[[UIApplication sharedApplication] delegate] bannerViewHeight];
-    CGRect newFrame = self.pullDownView.frame;
-    newFrame.origin.y = 0 - /*adBannerHeight -*/ self.toolbarHeight;
-    self.pullDownView.frame = newFrame;
-//    self.calculatorKeyboard.alpha = 1.0;
-//    self.titleLabel.alpha = self.hamburgerButton.alpha = self.settingsButton.alpha = self.detailLabel1.alpha = self.detailLabel2.alpha = self.pulldownBar.alpha = 0.0;
-}
-
 - (void)moveCalculatorView:(UIPanGestureRecognizer *)recognizer {
 //    LogTrace(@"%s", __PRETTY_FUNCTION__);
     
@@ -203,7 +164,7 @@
                                          newCenterY);
     [recognizer setTranslation:CGPointMake(0, 0) inView:self.view];
     
-    [self adjustContentFadingForYPosition:recognizer.view.frame.origin.y];
+    [self.pullDownView viewDragged:recognizer.view.frame.origin.y];
     
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         self.moveGestureBegan = YES;
@@ -220,15 +181,15 @@
             [UIView animateWithDuration:0.43 delay:0.0 usingSpringWithDamping:0.85 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveLinear animations:^{
                 if ([self hasPassedAutoSlideThreshold]) {
                     if (self.pullDownViewOriginatingAtTop) { // bottom
-                        [self calculatorViewMovingDown];
+                        [self.pullDownView animateViewMoveDown];
                     } else { // top
-                        [self calculatorViewMovingUp];
+                        [self.pullDownView animateViewMoveUp];
                     }
                 } else { // top
                     if (self.pullDownViewOriginatingAtTop) {
-                        [self calculatorViewMovingUp];
+                        [self.pullDownView animateViewMoveUp];
                     } else { // bottom
-                        [self calculatorViewMovingDown];
+                        [self.pullDownView animateViewMoveDown];
                     }
                 }
                 self.pullDownViewIsMoving = YES;
@@ -236,18 +197,18 @@
                 if (finished) {
                     if ([self hasPassedAutoSlideThreshold]) {
                         if (self.pullDownViewOriginatingAtTop) { // bottom
-                            [self calculatorViewMovingDown];
+                            [self.pullDownView animateViewMoveDown];
                             [self calculatorViewReachedBottom];
                         } else { // top
-                            [self calculatorViewMovingUp];
+                            [self.pullDownView animateViewMoveUp];
                             [self calculatorViewReachedTop];
                         }
                     } else {
                         if (self.pullDownViewOriginatingAtTop) { // top
-                            [self calculatorViewMovingUp];
+                            [self.pullDownView animateViewMoveUp];
                             [self.pullDownView addGestureRecognizer:self.holdGestureRecognizer];
                         } else { // bottom
-                            [self calculatorViewMovingDown];
+                            [self.pullDownView animateViewMoveDown];
                             [self.pullDownView removeGestureRecognizer:self.holdGestureRecognizer];
                         }
                     }
@@ -271,7 +232,7 @@
         newFrame.origin.y -= 20;
         self.pullDownView.frame = newFrame;
         
-        [self adjustContentFadingForYPosition:recognizer.view.frame.origin.y];
+        [self.pullDownView viewDragged:recognizer.view.frame.origin.y];
     } completion:^(BOOL finished) {
         
     }];
@@ -287,7 +248,7 @@
                 newFrame.origin.y += 20;
                 self.pullDownView.frame = newFrame;
                 
-                [self adjustContentFadingForYPosition:recognizer.view.frame.origin.y];
+                [self.pullDownView viewDragged:recognizer.view.frame.origin.y];
             } completion:^(BOOL finished) {
                 
             }];

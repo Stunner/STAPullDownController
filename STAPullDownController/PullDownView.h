@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "STAPullableView.h"
 
-@interface PullDownView : UIView
+@interface PullDownView : STAPullableView
 
 @end
