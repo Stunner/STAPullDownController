@@ -133,9 +133,9 @@
     
     [view reachedTop];
     if (view.isPullDownView) {
-        [self.pullDownView addGestureRecognizer:view.holdGestureRecognizer];
+        [view addGestureRecognizer:view.holdGestureRecognizer];
     } else {
-        [self.pullDownView removeGestureRecognizer:view.holdGestureRecognizer];
+        [view removeGestureRecognizer:view.holdGestureRecognizer];
     }
 }
 
@@ -143,9 +143,9 @@
     
     [view reachedBottom];
     if (view.isPullDownView) {
-        [self.pullDownView removeGestureRecognizer:view.holdGestureRecognizer];
+        [view removeGestureRecognizer:view.holdGestureRecognizer];
     } else {
-        [self.pullDownView addGestureRecognizer:view.holdGestureRecognizer];
+        [view addGestureRecognizer:view.holdGestureRecognizer];
     }
 }
 
@@ -228,10 +228,10 @@
                     } else { // revert to same values here!
                         if (view.originatingAtTop) {
                             [view animateViewMoveUp];
-                            [view addGestureRecognizer:view.holdGestureRecognizer];
+//                            [view addGestureRecognizer:view.holdGestureRecognizer];
                         } else { // bottom
                             [view animateViewMoveDown];
-                            [view removeGestureRecognizer:view.holdGestureRecognizer];
+//                            [view removeGestureRecognizer:view.holdGestureRecognizer];
                         }
                     }
                     view.isMoving = NO;

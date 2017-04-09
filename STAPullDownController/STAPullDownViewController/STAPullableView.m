@@ -47,6 +47,10 @@
 }
 
 - (void)setupFrame {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    [self removeGestureRecognizer:self.holdGestureRecognizer];
+    
     CGRect pullableViewFrame = self.controller.view.bounds;
     if (self.isPullDownView) {
         self.initialYPosition = pullableViewFrame.origin.y - pullableViewFrame.size.height + self.overlayOffset;
@@ -55,6 +59,10 @@
     }
     pullableViewFrame.origin.y = self.initialYPosition;
     self.frame = pullableViewFrame;
+    
+    if (self.holdGestureRecognizer) {
+        [self addGestureRecognizer:self.holdGestureRecognizer];
+    }
 }
 
 - (void)setupWithController:(STAPullDownViewController *)controller {
@@ -63,9 +71,9 @@
     self.controller = controller;
     [self setupFrame];
     
-    self.holdGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:controller
+    self.holdGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self.controller
                                                                                action:@selector(viewHeld:)];
-    self.holdGestureRecognizer.delegate = controller;
+    self.holdGestureRecognizer.delegate = self.controller;
     self.holdGestureRecognizer.minimumPressDuration = 0.0;
     [self addGestureRecognizer:self.holdGestureRecognizer];
     
