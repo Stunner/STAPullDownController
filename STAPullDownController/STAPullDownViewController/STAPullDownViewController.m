@@ -13,10 +13,12 @@
 //TODO: make this configurable
 #define kAutoSlideCompletionThreshold 30
 
-@interface STAPullDownViewController () <UIGestureRecognizerDelegate>
+@interface STAPullDownViewController ()
 
-@property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
-@property (nonatomic, strong) UILongPressGestureRecognizer *holdGestureRecognizer;
+//@property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
+//@property (nonatomic, strong) UILongPressGestureRecognizer *holdGestureRecognizer;
+//@property (nonatomic, strong) UIPanGestureRecognizer *pullUpViewPanGestureRecognizer;
+//@property (nonatomic ,strong) UILongPressGestureRecognizer *pullUpViewHoldGestureRecognizer;
 @property (nonatomic, assign) BOOL moveGestureBegan;
 @property (nonatomic, weak) UIToolbar *toolbar;
 
@@ -45,17 +47,20 @@
         [self.mainViewController didMoveToParentViewController:self];
     }
     
-    [[NSBundle mainBundle] loadNibNamed:@"PullDownView"
-                                  owner:self
-                                options:nil];
-    
     self.moveGestureBegan = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [self setUpPullDownView];
+    if (self.pullDownView) {
+        self.pullDownView.isPullDownView = YES;
+        [self setUpPullDownView];
+    }
+    if (self.pullUpView) {
+        self.pullUpView.isPullDownView = NO;
+        [self setUpPullUpView];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -75,32 +80,49 @@
         
         // Place code here to perform animations during the rotation.
         // You can pass nil or leave this block empty if not necessary.
-        [self.pullDownView setupWithBounds:self.view.bounds];
+        [self.pullDownView setupWithController:self];
         
     } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
         
         // Code here will execute after the rotation has finished.
         // Equivalent to placing it in the deprecated method -[didRotateFromInterfaceOrientation:]
-        [self.pullDownView setupWithBounds:self.view.bounds];
+        [self.pullDownView setupWithController:self];
         
     }];
 }
 
 - (void)setUpPullDownView {
     
-    [self.pullDownView setupWithBounds:self.view.bounds];
+    [self.pullDownView setupWithController:self];
     
-    self.holdGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
-                                                                               action:@selector(viewHeld:)];
-    self.holdGestureRecognizer.delegate = self;
-    self.holdGestureRecognizer.minimumPressDuration = 0.0;
-    [self.pullDownView addGestureRecognizer:self.holdGestureRecognizer];
-    
-    self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(moveView:)];
-    self.panGestureRecognizer.delegate = self;
-    [self.pullDownView addGestureRecognizer:self.panGestureRecognizer];
+//    self.holdGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+//                                                                               action:@selector(viewHeld:)];
+//    self.holdGestureRecognizer.delegate = self;
+//    self.holdGestureRecognizer.minimumPressDuration = 0.0;
+//    [self.pullDownView addGestureRecognizer:self.holdGestureRecognizer];
+//    
+//    self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(moveView:)];
+//    self.panGestureRecognizer.delegate = self;
+//    [self.pullDownView addGestureRecognizer:self.panGestureRecognizer];
     
     [self.view addSubview:self.pullDownView];
+}
+
+- (void)setUpPullUpView {
+    
+    [self.pullUpView setupWithController:self];
+    
+//    self.pullUpViewHoldGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+//                                                                                                        action:@selector(viewHeld:)];
+//    self.pullUpViewHoldGestureRecognizer.delegate = self;
+//    self.pullUpViewHoldGestureRecognizer.minimumPressDuration = 0.0;
+//    [self.pullUpView addGestureRecognizer:self.pullUpViewHoldGestureRecognizer];
+//    
+//    self.pullUpViewPanGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(moveView:)];
+//    self.pullUpViewPanGestureRecognizer.delegate = self;
+//    [self.pullUpView addGestureRecognizer:self.pullUpViewPanGestureRecognizer];
+    
+    [self.view addSubview:self.pullUpView];
 }
 
 #pragma mark - Pulldown Calculator Methods
@@ -108,13 +130,13 @@
 - (void)viewReachedTop:(STAPullableView *)view {
     
     [view reachedTop];
-    [self.pullDownView addGestureRecognizer:self.holdGestureRecognizer];
+    [self.pullDownView addGestureRecognizer:view.holdGestureRecognizer];
 }
 
 - (void)viewReachedBottom:(STAPullableView *)view {
     
     [view reachedBottom];
-    [self.pullDownView removeGestureRecognizer:self.holdGestureRecognizer];
+    [self.pullDownView removeGestureRecognizer:view.holdGestureRecognizer];
 }
 
 - (void)moveView:(UIPanGestureRecognizer *)recognizer {
@@ -159,12 +181,13 @@
         {
             [UIView animateWithDuration:0.43 delay:0.0 usingSpringWithDamping:0.85 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveLinear animations:^{
                 if ([view hasPassedAutoSlideThreshold]) {
-                    if (view.originatingAtTop) { // bottom
+                    // opposites here!
+                    if (view.originatingAtTop) {
                         [view animateViewMoveDown];
-                    } else { // top
+                    } else { // bottom
                         [view animateViewMoveUp];
                     }
-                } else { // top
+                } else { // revert to same values here!
                     if (view.originatingAtTop) {
                         [view animateViewMoveUp];
                     } else { // bottom
@@ -174,21 +197,22 @@
                 view.isMoving = YES;
             } completion:^(BOOL finished) {
                 if (finished) {
-                    if ([view hasPassedAutoSlideThreshold]) {
-                        if (view.originatingAtTop) { // bottom
+                    if (view.prevHasPassedAutoSlideThresholdValue) {
+                        // opposites here!
+                        if (view.originatingAtTop) {
                             [view animateViewMoveDown];
                             [self viewReachedBottom:view];
-                        } else { // top
+                        } else { // bottom
                             [view animateViewMoveUp];
                             [self viewReachedTop:view];
                         }
-                    } else {
-                        if (view.originatingAtTop) { // top
+                    } else { // revert to same values here!
+                        if (view.originatingAtTop) {
                             [view animateViewMoveUp];
-                            [view addGestureRecognizer:self.holdGestureRecognizer];
+                            [view addGestureRecognizer:view.holdGestureRecognizer];
                         } else { // bottom
                             [view animateViewMoveDown];
-                            [view removeGestureRecognizer:self.holdGestureRecognizer];
+                            [view removeGestureRecognizer:view.holdGestureRecognizer];
                         }
                     }
                     view.isMoving = NO;
@@ -216,7 +240,7 @@
     }
     
     [UIView animateWithDuration:0.43 delay:0.0 usingSpringWithDamping:0.85 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveLinear animations:^{
-        CGRect newFrame = self.pullDownView.frame;
+        CGRect newFrame = view.frame;
         newFrame.origin.y -= 20;
         view.frame = newFrame;
         
@@ -239,7 +263,7 @@
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         if (view.originatingAtTop) {
             [UIView animateWithDuration:0.43 delay:0.0 usingSpringWithDamping:0.5 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveLinear animations:^{
-                CGRect newFrame = self.pullDownView.frame;
+                CGRect newFrame = view.frame;
                 newFrame.origin.y += 20;
                 view.frame = newFrame;
                 

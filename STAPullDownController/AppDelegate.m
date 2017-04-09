@@ -28,6 +28,17 @@
     STAPullDownViewController *pullDownViewController = [[STAPullDownViewController alloc] init];
     pullDownViewController.mainViewController = viewController;
     
+    // ivar pullDownView has been connected via IBOutlet, load that here
+    [[NSBundle mainBundle] loadNibNamed:@"PullDownView"
+                                  owner:pullDownViewController
+                                options:nil];
+    
+    // create ivar pullUpView programmatically
+    STAPullableView *pullUpView = [[STAPullableView alloc] init];
+    pullUpView.originatingAtTop = NO;
+    pullUpView.backgroundColor = [UIColor blueColor];
+    pullDownViewController.pullUpView = pullUpView;
+    
     self.window.rootViewController = pullDownViewController;
     
     return YES;

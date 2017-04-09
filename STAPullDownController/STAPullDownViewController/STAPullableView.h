@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+@class STAPullDownViewController;
+
 @interface STAPullableView : UIView
 
 @property (nonatomic, assign) CGFloat overlayOffset;
@@ -16,8 +18,13 @@
 @property (nonatomic, assign) CGFloat autoSlideCompletionThreshold;
 @property (nonatomic, assign) BOOL originatingAtTop;
 @property (nonatomic, assign) BOOL isMoving;
+@property (nonatomic, assign) BOOL isPullDownView;
+@property (nonatomic, assign) BOOL prevHasPassedAutoSlideThresholdValue;
 
-- (void)setupWithBounds:(CGRect)bounds;
+@property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
+@property (nonatomic, strong) UILongPressGestureRecognizer *holdGestureRecognizer;
+
+- (void)setupWithController:(STAPullDownViewController *)controller;
 
 - (void)viewDragged:(CGFloat)yPos;
 
