@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		932FC1891E98A000005D77B1 /* UIView+Orientation.m in Sources */ = {isa = PBXBuildFile; fileRef = 932FC1881E98A000005D77B1 /* UIView+Orientation.m */; };
 		932FC18E1E98D7CA005D77B1 /* STAPullDownViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 932FC18D1E98D7CA005D77B1 /* STAPullDownViewController.m */; };
-		932FC1911E98D894005D77B1 /* STAPullDownView.m in Sources */ = {isa = PBXBuildFile; fileRef = 932FC1901E98D894005D77B1 /* STAPullDownView.m */; };
-		932FC1941E98D8B2005D77B1 /* STAPullUpView.m in Sources */ = {isa = PBXBuildFile; fileRef = 932FC1931E98D8B2005D77B1 /* STAPullUpView.m */; };
 		932FC1971E98DAE7005D77B1 /* STAPullableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 932FC1961E98DAE7005D77B1 /* STAPullableView.m */; };
 		93C0D1221E88CB8D009FD0E0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C0D1211E88CB8D009FD0E0 /* main.m */; };
 		93C0D1251E88CB8D009FD0E0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C0D1241E88CB8D009FD0E0 /* AppDelegate.m */; };
@@ -48,10 +46,6 @@
 		932FC1881E98A000005D77B1 /* UIView+Orientation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Orientation.m"; sourceTree = "<group>"; };
 		932FC18C1E98D7CA005D77B1 /* STAPullDownViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STAPullDownViewController.h; sourceTree = "<group>"; };
 		932FC18D1E98D7CA005D77B1 /* STAPullDownViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STAPullDownViewController.m; sourceTree = "<group>"; };
-		932FC18F1E98D894005D77B1 /* STAPullDownView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STAPullDownView.h; sourceTree = "<group>"; };
-		932FC1901E98D894005D77B1 /* STAPullDownView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STAPullDownView.m; sourceTree = "<group>"; };
-		932FC1921E98D8B2005D77B1 /* STAPullUpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STAPullUpView.h; sourceTree = "<group>"; };
-		932FC1931E98D8B2005D77B1 /* STAPullUpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STAPullUpView.m; sourceTree = "<group>"; };
 		932FC1951E98DAE7005D77B1 /* STAPullableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STAPullableView.h; sourceTree = "<group>"; };
 		932FC1961E98DAE7005D77B1 /* STAPullableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STAPullableView.m; sourceTree = "<group>"; };
 		93C0D11D1E88CB8D009FD0E0 /* STAPullDownController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = STAPullDownController.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -108,10 +102,6 @@
 			children = (
 				932FC18C1E98D7CA005D77B1 /* STAPullDownViewController.h */,
 				932FC18D1E98D7CA005D77B1 /* STAPullDownViewController.m */,
-				932FC18F1E98D894005D77B1 /* STAPullDownView.h */,
-				932FC1901E98D894005D77B1 /* STAPullDownView.m */,
-				932FC1921E98D8B2005D77B1 /* STAPullUpView.h */,
-				932FC1931E98D8B2005D77B1 /* STAPullUpView.m */,
 				932FC1951E98DAE7005D77B1 /* STAPullableView.h */,
 				932FC1961E98DAE7005D77B1 /* STAPullableView.m */,
 			);
@@ -340,9 +330,7 @@
 				932FC1891E98A000005D77B1 /* UIView+Orientation.m in Sources */,
 				93C0D15C1E8F6F3E009FD0E0 /* PullDownView.m in Sources */,
 				932FC1971E98DAE7005D77B1 /* STAPullableView.m in Sources */,
-				932FC1911E98D894005D77B1 /* STAPullDownView.m in Sources */,
 				93C0D1591E8EBA65009FD0E0 /* UIView+STAUtils.m in Sources */,
-				932FC1941E98D8B2005D77B1 /* STAPullUpView.m in Sources */,
 				93C0D1251E88CB8D009FD0E0 /* AppDelegate.m in Sources */,
 				93C0D1221E88CB8D009FD0E0 /* main.m in Sources */,
 			);
