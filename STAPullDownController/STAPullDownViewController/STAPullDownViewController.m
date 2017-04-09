@@ -130,13 +130,21 @@
 - (void)viewReachedTop:(STAPullableView *)view {
     
     [view reachedTop];
-    [self.pullDownView addGestureRecognizer:view.holdGestureRecognizer];
+    if (view.isPullDownView) {
+        [self.pullDownView addGestureRecognizer:view.holdGestureRecognizer];
+    } else {
+        [self.pullDownView removeGestureRecognizer:view.holdGestureRecognizer];
+    }
 }
 
 - (void)viewReachedBottom:(STAPullableView *)view {
     
     [view reachedBottom];
-    [self.pullDownView removeGestureRecognizer:view.holdGestureRecognizer];
+    if (view.isPullDownView) {
+        [self.pullDownView removeGestureRecognizer:view.holdGestureRecognizer];
+    } else {
+        [self.pullDownView addGestureRecognizer:view.holdGestureRecognizer];
+    }
 }
 
 - (void)moveView:(UIPanGestureRecognizer *)recognizer {
@@ -155,11 +163,20 @@
     
 //    NSLog(@"recognizer center: %f self view center: %f", recognizer.view.center.y, self.view.center.y - (48/2));
 //    CGFloat adBannerHeight = [(AppDelegate *)[[UIApplication sharedApplication] delegate] bannerViewHeight];
-    if (recognizer.view.center.y >= self.view.center.y /*- adBannerHeight */- self.toolbarHeight && translation.y > 0) {
-        [UIView animateWithDuration:0.2 animations:^{
-            [view setFrameY:0 -/* adBannerHeight -*/ self.toolbarHeight];
-        }];
-        return;
+    if (view.isPullDownView) {
+        if (view.center.y >= self.view.center.y /*- adBannerHeight */- self.toolbarHeight && translation.y > 0) {
+            [UIView animateWithDuration:0.2 animations:^{
+                [view setFrameY:0 -/* adBannerHeight -*/ self.toolbarHeight];
+            }];
+            return;
+        }
+    } else {
+        if (view.frame.origin.y <= self.view.center.y && translation.y < 0) {
+            [UIView animateWithDuration:0.2 animations:^{
+                [view setFrameY:0];
+            }];
+            return;
+        }
     }
     view.center = CGPointMake(view.center.x,
                               newCenterY);
@@ -241,7 +258,11 @@
     
     [UIView animateWithDuration:0.43 delay:0.0 usingSpringWithDamping:0.85 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveLinear animations:^{
         CGRect newFrame = view.frame;
-        newFrame.origin.y -= 20;
+        if (view.isPullDownView) {
+            newFrame.origin.y -= 20;
+        } else {
+            newFrame.origin.y += 20;
+        }
         view.frame = newFrame;
         
         [view viewDragged:recognizer.view.frame.origin.y];
@@ -261,22 +282,42 @@
         return;
     }
     if (recognizer.state == UIGestureRecognizerStateBegan) {
-        if (view.originatingAtTop) {
-            [UIView animateWithDuration:0.43 delay:0.0 usingSpringWithDamping:0.5 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveLinear animations:^{
-                CGRect newFrame = view.frame;
-                newFrame.origin.y += 20;
-                view.frame = newFrame;
-                
-                [view viewDragged:recognizer.view.frame.origin.y];
-            } completion:^(BOOL finished) {
-                
-            }];
+        if (view.isPullDownView) {
+            if (view.originatingAtTop) {
+                [UIView animateWithDuration:0.43 delay:0.0 usingSpringWithDamping:0.5 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveLinear animations:^{
+                    CGRect newFrame = view.frame;
+                    newFrame.origin.y += 20;
+                    view.frame = newFrame;
+                    
+                    [view viewDragged:recognizer.view.frame.origin.y];
+                } completion:^(BOOL finished) {
+                    
+                }];
+            }
+        } else {
+            if (!view.originatingAtTop) {
+                [UIView animateWithDuration:0.43 delay:0.0 usingSpringWithDamping:0.5 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveLinear animations:^{
+                    CGRect newFrame = view.frame;
+                    newFrame.origin.y -= 20;
+                    view.frame = newFrame;
+                    
+                    [view viewDragged:recognizer.view.frame.origin.y];
+                } completion:^(BOOL finished) {
+                    
+                }];
+            }
         }
     } else if (recognizer.state == UIGestureRecognizerStateChanged) {
         [view.layer removeAllAnimations];
     } else if (recognizer.state == UIGestureRecognizerStateEnded) {
-        if (view.originatingAtTop && ![view hasPassedAutoSlideThreshold]) {
-            [self viewHeldGestureEnded:recognizer];
+        if (view.isPullDownView) {
+            if (view.originatingAtTop && ![view hasPassedAutoSlideThreshold]) {
+                [self viewHeldGestureEnded:recognizer];
+            }
+        } else {
+            if (!view.originatingAtTop && ![view hasPassedAutoSlideThreshold]) {
+                [self viewHeldGestureEnded:recognizer];
+            }
         }
     } else {
         if (recognizer.state == UIGestureRecognizerStateCancelled
