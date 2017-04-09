@@ -15,13 +15,10 @@
 
 @interface STAPullDownViewController () <UIGestureRecognizerDelegate>
 
-@property (nonatomic, assign) CGFloat initialPullDownViewYPosition;
 @property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
 @property (nonatomic, strong) UILongPressGestureRecognizer *holdGestureRecognizer;
 @property (nonatomic, assign) BOOL moveGestureBegan;
-@property (nonatomic, assign) BOOL pullDownViewOriginatingAtTop;
-@property (nonatomic, assign) BOOL pullDownViewIsMoving;
-@property (nonatomic, strong) UIToolbar *toolbar;
+@property (nonatomic, weak) UIToolbar *toolbar;
 
 @end
 
@@ -32,6 +29,7 @@
     // Do any additional setup after loading the view.
     
 //    self.toolbarHeight = 20;
+    
     self.pullDownViewOffsetOverlap = 65;
     self.pullUpViewOffsetOverlap = 45;
     
@@ -52,7 +50,6 @@
                                 options:nil];
     
     self.moveGestureBegan = NO;
-    self.pullDownViewOriginatingAtTop = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -89,27 +86,17 @@
     }];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
 - (void)setUpPullDownView {
     
     [self.pullDownView setupWithBounds:self.view.bounds];
     
     self.holdGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
-                                                                               action:@selector(calculatorViewHeld:)];
+                                                                               action:@selector(viewHeld:)];
     self.holdGestureRecognizer.delegate = self;
     self.holdGestureRecognizer.minimumPressDuration = 0.0;
     [self.pullDownView addGestureRecognizer:self.holdGestureRecognizer];
     
-    self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(moveCalculatorView:)];
+    self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(moveView:)];
     self.panGestureRecognizer.delegate = self;
     [self.pullDownView addGestureRecognizer:self.panGestureRecognizer];
     
@@ -118,53 +105,45 @@
 
 #pragma mark - Pulldown Calculator Methods
 
-// TODO: make observable
-- (BOOL)hasPassedAutoSlideThreshold {
-    if (self.pullDownViewOriginatingAtTop) {
-        CGFloat yDelta = self.pullDownView.frame.origin.y - self.pullDownView.initialYPosition;
-        return yDelta >= kAutoSlideCompletionThreshold;
-    } else {
-//        CGFloat adBannerHeight = [(AppDelegate *)[[UIApplication sharedApplication] delegate] bannerViewHeight];
-        CGFloat yDelta = 0 - self.pullDownView.frame.origin.y/* - adBannerHeight*/;
-        return yDelta >= kAutoSlideCompletionThreshold;
-    }
-}
-
-// TODO: make observable
-- (void)calculatorViewReachedTop {
-//    LogTrace(@"%s", __PRETTY_FUNCTION__);
+- (void)viewReachedTop:(STAPullableView *)view {
     
-    self.pullDownViewOriginatingAtTop = YES;
+    [view reachedTop];
     [self.pullDownView addGestureRecognizer:self.holdGestureRecognizer];
 }
 
-// TODO: make observable
-- (void)calculatorViewReachedBottom {
-//    LogTrace(@"%s", __PRETTY_FUNCTION__);
+- (void)viewReachedBottom:(STAPullableView *)view {
     
-    self.pullDownViewOriginatingAtTop = NO;
+    [view reachedBottom];
     [self.pullDownView removeGestureRecognizer:self.holdGestureRecognizer];
 }
 
-- (void)moveCalculatorView:(UIPanGestureRecognizer *)recognizer {
+- (void)moveView:(UIPanGestureRecognizer *)recognizer {
 //    LogTrace(@"%s", __PRETTY_FUNCTION__);
     
-    CGPoint translation = [recognizer translationInView:self.view];
-    CGFloat newCenterY = recognizer.view.center.y + translation.y;
+    STAPullableView *view;
+    if ([recognizer.view isKindOfClass:[STAPullableView class]]) {
+        view = (STAPullableView *)recognizer.view;
+    } else {
+        NSLog(@"NOT STAPULLABLEVIEW!!!");
+        return;
+    }
     
-    NSLog(@"recognizer center: %f self view center: %f", recognizer.view.center.y, self.view.center.y - (48/2));
+    CGPoint translation = [recognizer translationInView:self.view];
+    CGFloat newCenterY = view.center.y + translation.y;
+    
+//    NSLog(@"recognizer center: %f self view center: %f", recognizer.view.center.y, self.view.center.y - (48/2));
 //    CGFloat adBannerHeight = [(AppDelegate *)[[UIApplication sharedApplication] delegate] bannerViewHeight];
     if (recognizer.view.center.y >= self.view.center.y /*- adBannerHeight */- self.toolbarHeight && translation.y > 0) {
         [UIView animateWithDuration:0.2 animations:^{
-            [self.pullDownView setFrameY:0 -/* adBannerHeight -*/ self.toolbarHeight];
+            [view setFrameY:0 -/* adBannerHeight -*/ self.toolbarHeight];
         }];
         return;
     }
-    recognizer.view.center = CGPointMake(recognizer.view.center.x,
-                                         newCenterY);
+    view.center = CGPointMake(view.center.x,
+                              newCenterY);
     [recognizer setTranslation:CGPointMake(0, 0) inView:self.view];
     
-    [self.pullDownView viewDragged:recognizer.view.frame.origin.y];
+    [view viewDragged:view.frame.origin.y];
     
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         self.moveGestureBegan = YES;
@@ -179,40 +158,40 @@
             || recognizer.state == UIGestureRecognizerStateEnded)
         {
             [UIView animateWithDuration:0.43 delay:0.0 usingSpringWithDamping:0.85 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveLinear animations:^{
-                if ([self hasPassedAutoSlideThreshold]) {
-                    if (self.pullDownViewOriginatingAtTop) { // bottom
-                        [self.pullDownView animateViewMoveDown];
+                if ([view hasPassedAutoSlideThreshold]) {
+                    if (view.originatingAtTop) { // bottom
+                        [view animateViewMoveDown];
                     } else { // top
-                        [self.pullDownView animateViewMoveUp];
+                        [view animateViewMoveUp];
                     }
                 } else { // top
-                    if (self.pullDownViewOriginatingAtTop) {
-                        [self.pullDownView animateViewMoveUp];
+                    if (view.originatingAtTop) {
+                        [view animateViewMoveUp];
                     } else { // bottom
-                        [self.pullDownView animateViewMoveDown];
+                        [view animateViewMoveDown];
                     }
                 }
-                self.pullDownViewIsMoving = YES;
+                view.isMoving = YES;
             } completion:^(BOOL finished) {
                 if (finished) {
-                    if ([self hasPassedAutoSlideThreshold]) {
-                        if (self.pullDownViewOriginatingAtTop) { // bottom
-                            [self.pullDownView animateViewMoveDown];
-                            [self calculatorViewReachedBottom];
+                    if ([view hasPassedAutoSlideThreshold]) {
+                        if (view.originatingAtTop) { // bottom
+                            [view animateViewMoveDown];
+                            [self viewReachedBottom:view];
                         } else { // top
-                            [self.pullDownView animateViewMoveUp];
-                            [self calculatorViewReachedTop];
+                            [view animateViewMoveUp];
+                            [self viewReachedTop:view];
                         }
                     } else {
-                        if (self.pullDownViewOriginatingAtTop) { // top
-                            [self.pullDownView animateViewMoveUp];
-                            [self.pullDownView addGestureRecognizer:self.holdGestureRecognizer];
+                        if (view.originatingAtTop) { // top
+                            [view animateViewMoveUp];
+                            [view addGestureRecognizer:self.holdGestureRecognizer];
                         } else { // bottom
-                            [self.pullDownView animateViewMoveDown];
-                            [self.pullDownView removeGestureRecognizer:self.holdGestureRecognizer];
+                            [view animateViewMoveDown];
+                            [view removeGestureRecognizer:self.holdGestureRecognizer];
                         }
                     }
-                    self.pullDownViewIsMoving = NO;
+                    view.isMoving = NO;
 //                    self.feedbackGenerator = nil;
                 }
             }];
@@ -226,38 +205,54 @@
 //    [self.feedbackGenerator impactOccurred];
 //}
 
-- (void)calculatorViewHeldGestureEnded:(UILongPressGestureRecognizer *)recognizer {
+- (void)viewHeldGestureEnded:(UILongPressGestureRecognizer *)recognizer {
+    
+    STAPullableView *view;
+    if ([recognizer.view isKindOfClass:[STAPullableView class]]) {
+        view = (STAPullableView *)recognizer.view;
+    } else {
+        NSLog(@"NOT STAPULLABLEVIEW!!!");
+        return;
+    }
+    
     [UIView animateWithDuration:0.43 delay:0.0 usingSpringWithDamping:0.85 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveLinear animations:^{
         CGRect newFrame = self.pullDownView.frame;
         newFrame.origin.y -= 20;
-        self.pullDownView.frame = newFrame;
+        view.frame = newFrame;
         
-        [self.pullDownView viewDragged:recognizer.view.frame.origin.y];
+        [view viewDragged:recognizer.view.frame.origin.y];
     } completion:^(BOOL finished) {
         
     }];
 }
 
-- (void)calculatorViewHeld:(UILongPressGestureRecognizer *)recognizer  {
+- (void)viewHeld:(UILongPressGestureRecognizer *)recognizer  {
 //    LogTrace(@"%s", __PRETTY_FUNCTION__);
     
+    STAPullableView *view;
+    if ([recognizer.view isKindOfClass:[STAPullableView class]]) {
+        view = (STAPullableView *)recognizer.view;
+    } else {
+        NSLog(@"NOT STAPULLABLEVIEW!!!");
+        return;
+    }
     if (recognizer.state == UIGestureRecognizerStateBegan) {
-        if (self.pullDownViewOriginatingAtTop) {
+        if (view.originatingAtTop) {
             [UIView animateWithDuration:0.43 delay:0.0 usingSpringWithDamping:0.5 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveLinear animations:^{
                 CGRect newFrame = self.pullDownView.frame;
                 newFrame.origin.y += 20;
-                self.pullDownView.frame = newFrame;
+                view.frame = newFrame;
                 
-                [self.pullDownView viewDragged:recognizer.view.frame.origin.y];
+                [view viewDragged:recognizer.view.frame.origin.y];
             } completion:^(BOOL finished) {
                 
             }];
         }
     } else if (recognizer.state == UIGestureRecognizerStateChanged) {
-        [self.pullDownView.layer removeAllAnimations];
+        [view.layer removeAllAnimations];
     } else if (recognizer.state == UIGestureRecognizerStateEnded) {
-        if (self.pullDownViewOriginatingAtTop && ![self hasPassedAutoSlideThreshold]) {
-            [self calculatorViewHeldGestureEnded:recognizer];
+        if (view.originatingAtTop && ![view hasPassedAutoSlideThreshold]) {
+            [self viewHeldGestureEnded:recognizer];
         }
     } else {
         if (recognizer.state == UIGestureRecognizerStateCancelled
@@ -266,8 +261,8 @@
             // Long press ended
             
             if (!self.moveGestureBegan) {
-                if (self.pullDownViewOriginatingAtTop) {
-                    [self calculatorViewHeldGestureEnded:recognizer];
+                if (view.originatingAtTop) {
+                    [self viewHeldGestureEnded:recognizer];
                 }
             }
         }
