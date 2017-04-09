@@ -24,6 +24,8 @@
 @property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
 @property (nonatomic, strong) UILongPressGestureRecognizer *holdGestureRecognizer;
 
+
+- (void)setupFrame;
 - (void)setupWithController:(STAPullDownViewController *)controller;
 
 - (void)viewDragged:(CGFloat)yPos;

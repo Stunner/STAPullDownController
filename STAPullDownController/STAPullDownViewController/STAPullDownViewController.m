@@ -80,13 +80,15 @@
         
         // Place code here to perform animations during the rotation.
         // You can pass nil or leave this block empty if not necessary.
-        [self.pullDownView setupWithController:self];
+        [self.pullDownView setupFrame];
+        [self.pullUpView setupFrame];
         
     } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
         
         // Code here will execute after the rotation has finished.
         // Equivalent to placing it in the deprecated method -[didRotateFromInterfaceOrientation:]
-        [self.pullDownView setupWithController:self];
+        [self.pullDownView setupFrame];
+        [self.pullUpView setupFrame];
         
     }];
 }
