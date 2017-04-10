@@ -45,10 +45,12 @@
     
     if (self.pullDownView) {
         self.pullDownView.isPullDownView = YES;
+        self.pullUpView.toolbarHeight = self.pullDownView.overlayOffset;
         [self setUpPullDownView];
     }
     if (self.pullUpView) {
         self.pullUpView.isPullDownView = NO;
+        self.pullDownView.toolbarHeight = self.pullUpView.overlayOffset;
         [self setUpPullUpView];
     }
 }
@@ -100,7 +102,6 @@
 #pragma mark - Pulldown Calculator Methods
 
 - (void)moveView:(UIPanGestureRecognizer *)recognizer {
-//    LogTrace(@"%s", __PRETTY_FUNCTION__);
     
     STAPullableView *view;
     if ([recognizer.view isKindOfClass:[STAPullableView class]]) {
@@ -116,16 +117,16 @@
 //    NSLog(@"recognizer center: %f self view center: %f", recognizer.view.center.y, self.view.center.y - (48/2));
 //    CGFloat adBannerHeight = [(AppDelegate *)[[UIApplication sharedApplication] delegate] bannerViewHeight];
     if (view.isPullDownView) {
-        if (view.center.y >= self.view.center.y /*- adBannerHeight */- self.toolbarHeight && translation.y > 0) {
+        if (view.center.y >= self.view.center.y /*- adBannerHeight */- view.toolbarHeight && translation.y > 0) {
             [UIView animateWithDuration:0.2 animations:^{
-                [view setFrameY:0 -/* adBannerHeight -*/ self.toolbarHeight];
+                [view setFrameY:0 -/* adBannerHeight -*/ view.toolbarHeight];
             }];
             return;
         }
     } else {
         if (view.frame.origin.y <= self.view.center.y && translation.y < 0) {
             [UIView animateWithDuration:0.2 animations:^{
-                [view setFrameY:0];
+                [view setFrameY:0 + view.toolbarHeight];
             }];
             return;
         }

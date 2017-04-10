@@ -17,6 +17,5 @@
 @property (nonatomic, strong) IBOutlet STAPullableView *pullUpView;
 @property (nonatomic, assign) CGFloat pullUpViewOffsetOverlap;
 @property (nonatomic, weak) UIToolbar *toolbar;
-@property (nonatomic, assign) CGFloat toolbarHeight;
 
 @end

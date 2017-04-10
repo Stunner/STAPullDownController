@@ -130,7 +130,7 @@
     if (self.isPullDownView) {
         newFrame.origin.y = self.initialYPosition;
     } else {
-        newFrame.origin.y = 0;
+        newFrame.origin.y = 0 + self.toolbarHeight;
     }
     self.frame = newFrame;
 }
