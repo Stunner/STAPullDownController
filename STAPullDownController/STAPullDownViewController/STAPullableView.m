@@ -59,8 +59,6 @@
 - (void)setupFrame {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
-    [self removeGestureRecognizer:self.holdGestureRecognizer];
-    
     CGRect pullableViewFrame = self.controller.view.bounds;
     if (self.isPullDownView) {
         self.originatingAtTop = YES;
@@ -71,10 +69,6 @@
     }
     pullableViewFrame.origin.y = self.initialYPosition;
     self.frame = pullableViewFrame;
-    
-    if (self.holdGestureRecognizer) {
-        [self addGestureRecognizer:self.holdGestureRecognizer];
-    }
 }
 
 - (void)setupWithController:(STAPullDownViewController *)controller {
