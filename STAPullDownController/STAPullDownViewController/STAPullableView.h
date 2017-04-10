@@ -12,6 +12,10 @@
 
 @interface STAPullableView : UIView
 
+/**
+ Denotes how much space the pull up/down view should overlap the underlying view as a bar.
+ (Can be thought of as tool bar or navigation bar height.) Defaults to 65.
+ */
 @property (nonatomic, assign) CGFloat overlayOffset;
 @property (nonatomic, assign) CGFloat toolbarHeight;
 @property (nonatomic, assign, readonly) CGFloat initialYPosition;

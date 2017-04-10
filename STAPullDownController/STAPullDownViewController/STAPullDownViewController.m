@@ -15,12 +15,7 @@
 
 @interface STAPullDownViewController ()
 
-//@property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
-//@property (nonatomic, strong) UILongPressGestureRecognizer *holdGestureRecognizer;
-//@property (nonatomic, strong) UIPanGestureRecognizer *pullUpViewPanGestureRecognizer;
-//@property (nonatomic ,strong) UILongPressGestureRecognizer *pullUpViewHoldGestureRecognizer;
 @property (nonatomic, assign) BOOL moveGestureBegan;
-@property (nonatomic, weak) UIToolbar *toolbar;
 
 @end
 
@@ -29,11 +24,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-//    self.toolbarHeight = 20;
-    
-    self.pullDownViewOffsetOverlap = 65;
-    self.pullUpViewOffsetOverlap = 45;
     
     if (self.mainViewController) {
         [self addChildViewController:self.mainViewController];
@@ -97,16 +87,6 @@
     
     [self.pullDownView setupWithController:self];
     
-//    self.holdGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
-//                                                                               action:@selector(viewHeld:)];
-//    self.holdGestureRecognizer.delegate = self;
-//    self.holdGestureRecognizer.minimumPressDuration = 0.0;
-//    [self.pullDownView addGestureRecognizer:self.holdGestureRecognizer];
-//    
-//    self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(moveView:)];
-//    self.panGestureRecognizer.delegate = self;
-//    [self.pullDownView addGestureRecognizer:self.panGestureRecognizer];
-    
     [self.view addSubview:self.pullDownView];
 }
 
@@ -114,40 +94,10 @@
     
     [self.pullUpView setupWithController:self];
     
-//    self.pullUpViewHoldGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
-//                                                                                                        action:@selector(viewHeld:)];
-//    self.pullUpViewHoldGestureRecognizer.delegate = self;
-//    self.pullUpViewHoldGestureRecognizer.minimumPressDuration = 0.0;
-//    [self.pullUpView addGestureRecognizer:self.pullUpViewHoldGestureRecognizer];
-//    
-//    self.pullUpViewPanGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(moveView:)];
-//    self.pullUpViewPanGestureRecognizer.delegate = self;
-//    [self.pullUpView addGestureRecognizer:self.pullUpViewPanGestureRecognizer];
-    
     [self.view addSubview:self.pullUpView];
 }
 
 #pragma mark - Pulldown Calculator Methods
-
-- (void)viewReachedTop:(STAPullableView *)view {
-    
-    [view reachedTop];
-    if (view.isPullDownView) {
-        [view addGestureRecognizer:view.holdGestureRecognizer];
-    } else {
-        [view removeGestureRecognizer:view.holdGestureRecognizer];
-    }
-}
-
-- (void)viewReachedBottom:(STAPullableView *)view {
-    
-    [view reachedBottom];
-    if (view.isPullDownView) {
-        [view removeGestureRecognizer:view.holdGestureRecognizer];
-    } else {
-        [view addGestureRecognizer:view.holdGestureRecognizer];
-    }
-}
 
 - (void)moveView:(UIPanGestureRecognizer *)recognizer {
 //    LogTrace(@"%s", __PRETTY_FUNCTION__);
@@ -220,18 +170,16 @@
                         // opposites here!
                         if (view.originatingAtTop) {
                             [view animateViewMoveDown];
-                            [self viewReachedBottom:view];
+                            [view reachedBottom];
                         } else { // bottom
                             [view animateViewMoveUp];
-                            [self viewReachedTop:view];
+                            [view reachedTop];
                         }
                     } else { // revert to same values here!
                         if (view.originatingAtTop) {
                             [view animateViewMoveUp];
-//                            [view addGestureRecognizer:view.holdGestureRecognizer];
                         } else { // bottom
                             [view animateViewMoveDown];
-//                            [view removeGestureRecognizer:view.holdGestureRecognizer];
                         }
                     }
                     view.isMoving = NO;
@@ -274,7 +222,6 @@
 }
 
 - (void)viewHeld:(UILongPressGestureRecognizer *)recognizer  {
-//    LogTrace(@"%s", __PRETTY_FUNCTION__);
     
     STAPullableView *view;
     if ([recognizer.view isKindOfClass:[STAPullableView class]]) {
@@ -325,7 +272,7 @@
         if (recognizer.state == UIGestureRecognizerStateCancelled
             || recognizer.state == UIGestureRecognizerStateFailed)
         {
-            // Long press ended
+            // Long press ended -- i.e. converted to a move gesture
             
             if (!self.moveGestureBegan) {
                 if (view.originatingAtTop) {
@@ -339,7 +286,6 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
 shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-//    LogTrace(@"%s", __PRETTY_FUNCTION__);
     
     if (![gestureRecognizer isKindOfClass:[UITapGestureRecognizer class]] &&
         ![otherGestureRecognizer isKindOfClass:[UITapGestureRecognizer class]])

@@ -35,7 +35,6 @@
     
     // create ivar pullUpView programmatically
     STAPullableView *pullUpView = [[STAPullableView alloc] init];
-    pullUpView.originatingAtTop = NO;
     pullUpView.backgroundColor = [UIColor blueColor];
     pullDownViewController.pullUpView = pullUpView;
     

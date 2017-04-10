@@ -46,6 +46,16 @@
     return self;
 }
 
+- (void)setIsPullDownView:(BOOL)isPullDownView {
+    _isPullDownView = isPullDownView;
+    
+    if (isPullDownView) {
+        self.overlayOffset = 65;
+    } else {
+        self.overlayOffset = 45;
+    }
+}
+
 - (void)setupFrame {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
@@ -53,8 +63,10 @@
     
     CGRect pullableViewFrame = self.controller.view.bounds;
     if (self.isPullDownView) {
+        self.originatingAtTop = YES;
         self.initialYPosition = pullableViewFrame.origin.y - pullableViewFrame.size.height + self.overlayOffset;
     } else {
+        self.originatingAtTop = NO;
         self.initialYPosition = pullableViewFrame.size.height - self.overlayOffset;
     }
     pullableViewFrame.origin.y = self.initialYPosition;
@@ -145,12 +157,22 @@
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     self.originatingAtTop = YES;
+    if (self.isPullDownView) {
+        [self addGestureRecognizer:self.holdGestureRecognizer];
+    } else {
+        [self removeGestureRecognizer:self.holdGestureRecognizer];
+    }
 }
 
 - (void)reachedBottom{
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     self.originatingAtTop = NO;
+    if (self.isPullDownView) {
+        [self removeGestureRecognizer:self.holdGestureRecognizer];
+    } else {
+        [self addGestureRecognizer:self.holdGestureRecognizer];
+    }
 }
 
 @end
