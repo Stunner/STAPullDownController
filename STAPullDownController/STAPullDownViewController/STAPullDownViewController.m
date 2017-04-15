@@ -118,6 +118,7 @@
 //    CGFloat adBannerHeight = [(AppDelegate *)[[UIApplication sharedApplication] delegate] bannerViewHeight];
     if (view.isPullDownView) {
         if (view.center.y >= self.view.center.y /*- adBannerHeight */- view.toolbarHeight && translation.y > 0) {
+            [view reachedBottom];
             [UIView animateWithDuration:0.2 animations:^{
                 [view setFrameY:0 -/* adBannerHeight -*/ view.toolbarHeight];
             }];
@@ -125,8 +126,9 @@
         }
     } else {
         if (view.frame.origin.y <= self.view.center.y && translation.y < 0) {
+            [view reachedTop];
             [UIView animateWithDuration:0.2 animations:^{
-                [view setFrameY:0 + view.toolbarHeight];
+                [view setFrameY:view.restingTopYPos];
             }];
             return;
         }
@@ -135,14 +137,13 @@
                               newCenterY);
     [recognizer setTranslation:CGPointMake(0, 0) inView:self.view];
     
-    [view viewDragged:view.frame.origin.y];
-    
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         self.moveGestureBegan = YES;
 //        [self.mainViewController beganMovingPulldownCalculatorView];
 //        self.feedbackGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleMedium];
 //        [self.feedbackGenerator prepare];
     } else if (recognizer.state == UIGestureRecognizerStateChanged) {
+        [view viewDragged:view.frame.origin.y];
         
     } else {
         if (recognizer.state == UIGestureRecognizerStateCancelled

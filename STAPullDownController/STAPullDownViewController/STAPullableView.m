@@ -127,7 +127,7 @@
         }
     } else {
         if (self.originatingAtTop) {
-            CGFloat yDelta = self.frame.origin.y/* - adBannerHeight*/;
+            CGFloat yDelta = self.frame.origin.y - self.restingTopYPos/* - adBannerHeight*/;
             returnable = (yDelta >= self.autoSlideCompletionThreshold);
         } else {
             CGFloat yDelta = self.initialYPosition - self.frame.origin.y;
@@ -145,8 +145,12 @@
     if (self.isPullDownView) {
         newFrame.origin.y = self.initialYPosition;
     } else {
-        newFrame.origin.y = 0 + self.toolbarHeight;
+        newFrame.origin.y = self.initialYPosition - self.frame.size.height + self.overlayOffset;
+        if (newFrame.origin.y < self.toolbarHeight) {
+            newFrame.origin.y = self.toolbarHeight;
+        }
     }
+    self.restingTopYPos = newFrame.origin.y;
     self.frame = newFrame;
 }
 

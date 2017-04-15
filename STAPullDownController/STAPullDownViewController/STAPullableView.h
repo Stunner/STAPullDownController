@@ -24,6 +24,7 @@
 @property (nonatomic, assign) BOOL isMoving;
 @property (nonatomic, assign) BOOL isPullDownView;
 @property (nonatomic, assign) BOOL prevHasPassedAutoSlideThresholdValue;
+@property (nonatomic, assign) CGFloat restingTopYPos;
 
 @property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
 @property (nonatomic, strong) UILongPressGestureRecognizer *holdGestureRecognizer;
