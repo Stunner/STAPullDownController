@@ -36,7 +36,7 @@
         }
         [self.mainViewController didMoveToParentViewController:self];
     }
-    
+    self.view.autoresizesSubviews = YES;
     self.moveGestureBegan = NO;
 }
 

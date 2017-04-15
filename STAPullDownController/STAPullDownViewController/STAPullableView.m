@@ -51,21 +51,36 @@
     
     if (isPullDownView) {
         self.overlayOffset = 65;
+//        self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     } else {
         self.overlayOffset = 45;
+//        self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     }
 }
 
 - (void)setupFrame {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
-    CGRect pullableViewFrame = self.controller.view.bounds;
+    CGRect pullableViewFrame = self.frame;
+    if (CGRectEqualToRect(self.frame, CGRectZero)) {
+        pullableViewFrame = self.controller.view.bounds;
+    }
+    
+    // Only specify flexible height mask when view is at least as tall as controller so as to avoid
+    // view growing absurdly tall. In addition, view will shrink if flexible height mask is specified
+    // on a view that is not as tall as controller's view.
+    if (pullableViewFrame.size.height >= self.controller.view.bounds.size.height) {
+        self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    } else {
+        self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    }
+    
     if (self.isPullDownView) {
         self.originatingAtTop = YES;
-        self.initialYPosition = pullableViewFrame.origin.y - pullableViewFrame.size.height + self.overlayOffset;
+        self.initialYPosition = 0 - pullableViewFrame.size.height + self.overlayOffset;
     } else {
         self.originatingAtTop = NO;
-        self.initialYPosition = pullableViewFrame.size.height - self.overlayOffset;
+        self.initialYPosition = self.controller.view.bounds.size.height - self.overlayOffset;
     }
     pullableViewFrame.origin.y = self.initialYPosition;
     self.frame = pullableViewFrame;
