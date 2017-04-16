@@ -43,18 +43,17 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    // setup for both requires on each others toolbarHeight value, so set them up here
+    self.pullDownView.toolbarHeight = self.pullUpView.overlayOffset;
+    self.pullUpView.toolbarHeight = self.pullDownView.overlayOffset;
+    
     if (self.pullDownView) {
         self.pullDownView.isPullDownView = YES;
+        [self setUpPullDownView];
     }
     if (self.pullUpView) {
         self.pullUpView.isPullDownView = NO;
-        self.pullDownView.toolbarHeight = self.pullUpView.overlayOffset;
         [self setUpPullUpView];
-    }
-    if (self.pullDownView) { // split up this if statement so that there is a valid value within pull up
-                             // view's toolbar height which pull down view requires during setup
-        self.pullUpView.toolbarHeight = self.pullDownView.overlayOffset;
-        [self setUpPullDownView];
     }
 }
 

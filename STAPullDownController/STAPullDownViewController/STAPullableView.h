@@ -17,7 +17,19 @@
  (Can be thought of as tool bar or navigation bar height.) Defaults to 65.
  */
 @property (nonatomic, assign) CGFloat overlayOffset;
-@property (nonatomic, assign) CGFloat toolbarHeight; // TODO: rename to slideInset
+/**
+ Denotes the height of the bar at the top or the bottom of the screen lying opposite of this 
+ view (i.e. if this was a pull down view, this corresponds to the toolbar height at the bottom
+ of the screen, and in the event this view is a pull up view, it would correspond to the height
+ of the navigation bar).
+ */
+@property (nonatomic, assign) CGFloat toolbarHeight;
+/**
+ Denotes the amount of space to stop short by when dragged. In other words, padding above or below
+ the normal endpoint denoted by toolbarHeight. This is useful when attempting to avoid concealing 
+ an ad bar above the toolbar, for instance.
+ */
+@property (nonatomic, assign) CGFloat slideInset;
 @property (nonatomic, assign, readonly) CGFloat initialYPosition;
 @property (nonatomic, assign) CGFloat autoSlideCompletionThreshold;
 @property (nonatomic, assign) BOOL originatingAtTop;

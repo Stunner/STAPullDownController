@@ -11,11 +11,9 @@
 
 @interface STAPullDownViewController : UIViewController <UIGestureRecognizerDelegate>
 
-@property (nonatomic, strong) id mainViewController; // must either be UIViewController or UITableViewController
-@property (nonatomic, strong) IBOutlet STAPullableView *pullDownView;
-@property (nonatomic, assign) CGFloat pullDownViewOffsetOverlap;
-@property (nonatomic, strong) IBOutlet STAPullableView *pullUpView;
-@property (nonatomic, assign) CGFloat pullUpViewOffsetOverlap;
-@property (nonatomic, weak) UIToolbar *toolbar;
+@property (nonnull, nonatomic, strong) id mainViewController; // must either be UIViewController or UITableViewController
+@property (nullable, nonatomic, strong) IBOutlet STAPullableView *pullDownView;
+@property (nullable, nonatomic, strong) IBOutlet STAPullableView *pullUpView;
+@property (nullable, nonatomic, weak) UIToolbar *toolbar;
 
 @end

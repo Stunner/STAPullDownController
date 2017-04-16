@@ -32,11 +32,15 @@
     [[NSBundle mainBundle] loadNibNamed:@"PullDownView"
                                   owner:pullDownViewController
                                 options:nil];
+    // specify any additional options for the pull down view...
+    pullDownViewController.pullDownView.slideInset = 45;
     
     // create ivar pullUpView programmatically
     STAPullableView *pullUpView = [[STAPullableView alloc] init];
-    pullUpView.frame = CGRectMake(0, 0, 375, 300);
+    pullUpView.frame = CGRectMake(0, 0, 375, 667);
     pullUpView.backgroundColor = [UIColor blueColor];
+    pullUpView.overlayOffset = 45;
+    pullUpView.slideInset = 65;
     pullDownViewController.pullUpView = pullUpView;
     
     self.window.rootViewController = pullDownViewController;
