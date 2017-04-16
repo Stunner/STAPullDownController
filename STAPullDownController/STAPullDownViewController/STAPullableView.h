@@ -17,13 +17,14 @@
  (Can be thought of as tool bar or navigation bar height.) Defaults to 65.
  */
 @property (nonatomic, assign) CGFloat overlayOffset;
-@property (nonatomic, assign) CGFloat toolbarHeight;
+@property (nonatomic, assign) CGFloat toolbarHeight; // TODO: rename to slideInset
 @property (nonatomic, assign, readonly) CGFloat initialYPosition;
 @property (nonatomic, assign) CGFloat autoSlideCompletionThreshold;
 @property (nonatomic, assign) BOOL originatingAtTop;
 @property (nonatomic, assign) BOOL isMoving;
 @property (nonatomic, assign) BOOL isPullDownView;
 @property (nonatomic, assign) BOOL prevHasPassedAutoSlideThresholdValue;
+@property (nonatomic, assign) CGFloat restingBottomYPos;
 @property (nonatomic, assign) CGFloat restingTopYPos;
 
 @property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;

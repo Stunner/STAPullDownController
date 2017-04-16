@@ -45,13 +45,16 @@
     
     if (self.pullDownView) {
         self.pullDownView.isPullDownView = YES;
-        self.pullUpView.toolbarHeight = self.pullDownView.overlayOffset;
-        [self setUpPullDownView];
     }
     if (self.pullUpView) {
         self.pullUpView.isPullDownView = NO;
         self.pullDownView.toolbarHeight = self.pullUpView.overlayOffset;
         [self setUpPullUpView];
+    }
+    if (self.pullDownView) { // split up this if statement so that there is a valid value within pull up
+                             // view's toolbar height which pull down view requires during setup
+        self.pullUpView.toolbarHeight = self.pullDownView.overlayOffset;
+        [self setUpPullDownView];
     }
 }
 
@@ -117,15 +120,15 @@
 //    NSLog(@"recognizer center: %f self view center: %f", recognizer.view.center.y, self.view.center.y - (48/2));
 //    CGFloat adBannerHeight = [(AppDelegate *)[[UIApplication sharedApplication] delegate] bannerViewHeight];
     if (view.isPullDownView) {
-        if (view.center.y >= self.view.center.y /*- adBannerHeight */- view.toolbarHeight && translation.y > 0) {
+        if (view.frame.origin.y >= view.restingBottomYPos && translation.y > 0) {
             [view reachedBottom];
             [UIView animateWithDuration:0.2 animations:^{
-                [view setFrameY:0 -/* adBannerHeight -*/ view.toolbarHeight];
+                [view setFrameY:view.restingBottomYPos];
             }];
             return;
         }
     } else {
-        if (view.frame.origin.y <= self.view.center.y && translation.y < 0) {
+        if (view.frame.origin.y <= view.restingTopYPos && translation.y < 0) {
             [view reachedTop];
             [UIView animateWithDuration:0.2 animations:^{
                 [view setFrameY:view.restingTopYPos];
