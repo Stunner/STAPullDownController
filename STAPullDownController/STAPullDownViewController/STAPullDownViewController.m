@@ -8,7 +8,7 @@
 
 #import "STAPullDownViewController.h"
 #import "UIView+STAUtils.h"
-#import "UIView+Orientation.h"
+#import "UIView+STAOrientation.h"
 
 //TODO: make this configurable
 #define kAutoSlideCompletionThreshold 30

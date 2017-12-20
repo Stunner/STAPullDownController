@@ -2,9 +2,9 @@
 //  UIView+Orientation.m
 //
 
-#import "UIView+Orientation.h"
+#import "UIView+STAOrientation.h"
 
-@implementation UIView (Orientation)
+@implementation UIView (STAOrientation)
 
 + (ViewOrientation)viewOrientationForSize:(CGSize)size {
     return (size.width > size.height) ? ViewOrientationLandscape : ViewOrientationPortrait;
