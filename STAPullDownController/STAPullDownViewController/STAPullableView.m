@@ -46,6 +46,11 @@
     return self;
 }
 
+- (void)setSlideInset:(CGFloat)slideInset {
+    _slideInset = slideInset;
+    [self setupFrame];
+}
+
 - (void)setupFrame {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
@@ -69,9 +74,12 @@
         
         self.restingBottomYPos = self.initialYPosition + pullableViewFrame.size.height - self.overlayOffset;
         // if pull up view is tall enough to conceal bottom bar...
-        if (self.restingBottomYPos + pullableViewFrame.size.height > self.controller.view.frame.size.height - self.toolbarHeight  - self.slideInset) {
+        if (self.restingBottomYPos + pullableViewFrame.size.height >
+            self.controller.view.frame.size.height - self.toolbarHeight  - self.slideInset)
+        {
             // ...dont let it overlap
-            self.restingBottomYPos = self.controller.view.bounds.size.height - self.toolbarHeight - pullableViewFrame.size.height - self.slideInset;
+            self.restingBottomYPos = self.controller.view.bounds.size.height - self.toolbarHeight -
+                                        pullableViewFrame.size.height - self.slideInset;
         }
     } else {
         self.originatingAtTop = NO;
@@ -87,15 +95,15 @@
     self.frame = pullableViewFrame;
 }
 
-- (void)setupWithController:(STAPullDownViewController *)controller {
+- (void)setupWithController:(STAPullDownViewController * _Nonnull)controller {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     self.controller = controller;
     [self setupFrame];
     
-    self.holdGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self.controller
+    self.holdGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:controller
                                                                                action:@selector(viewHeld:)];
-    self.holdGestureRecognizer.delegate = self.controller;
+    self.holdGestureRecognizer.delegate = controller;
     self.holdGestureRecognizer.minimumPressDuration = 0.0;
     [self addGestureRecognizer:self.holdGestureRecognizer];
     
@@ -106,10 +114,36 @@
     
 }
 
-- (void)viewDragged:(CGFloat)yPos {
-//    NSLog(@"%s", __PRETTY_FUNCTION__);
-    
-    CGFloat slideDistance = 0 - self.initialYPosition - self.toolbarHeight;
+- (void)setupView {
+    // empty method meant to be subclassed
+}
+
+- (void)toggleView {
+    [UIView animateWithDuration:0.43 delay:0.0 usingSpringWithDamping:0.85 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveLinear animations:^{
+        if (self.originatingAtTop) {
+            [self animateViewMoveDown];
+        } else { // bottom
+            [self animateViewMoveUp];
+        }
+        self.isMoving = YES;
+    } completion:^(BOOL finished) {
+        if (finished) {
+            if (self.originatingAtTop) {
+                [self animateViewMoveDown];
+                [self reachedBottom];
+            } else { // bottom
+                [self animateViewMoveUp];
+                [self reachedTop];
+            }
+            self.isMoving = NO;
+        }
+    }];
+}
+
+- (void)viewDraggedTo:(CGFloat)yPos {
+    if ([self.delegate respondsToSelector:@selector(view:draggedTo:)]) {
+        [self.delegate view:self draggedTo:yPos];
+    }
 }
 
 - (BOOL)hasPassedAutoSlideThreshold {
@@ -122,13 +156,12 @@
             CGFloat yDelta = self.frame.origin.y - self.initialYPosition;
             returnable = (yDelta >= self.autoSlideCompletionThreshold);
         } else {
-            //        CGFloat adBannerHeight = [(AppDelegate *)[[UIApplication sharedApplication] delegate] bannerViewHeight];
-            CGFloat yDelta = 0 - self.frame.origin.y/* - adBannerHeight*/;
+            CGFloat yDelta = 0 - self.frame.origin.y;
             returnable = (yDelta >= self.autoSlideCompletionThreshold);
         }
     } else {
         if (self.originatingAtTop) {
-            CGFloat yDelta = self.frame.origin.y - self.restingTopYPos/* - adBannerHeight*/;
+            CGFloat yDelta = self.frame.origin.y - self.restingTopYPos;
             returnable = (yDelta >= self.autoSlideCompletionThreshold);
         } else {
             CGFloat yDelta = self.initialYPosition - self.frame.origin.y;
@@ -139,7 +172,7 @@
     return returnable;
 }
 
-- (void)animateViewMoveUp {
+- (CGRect)animateViewMoveUp {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     CGRect newFrame = self.frame;
@@ -149,9 +182,10 @@
         newFrame.origin.y = self.restingTopYPos;
     }
     self.frame = newFrame;
+    return newFrame;
 }
 
-- (void)animateViewMoveDown {
+- (CGRect)animateViewMoveDown {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     CGRect newFrame = self.frame;
@@ -161,6 +195,7 @@
         newFrame.origin.y = self.initialYPosition;
     }
     self.frame = newFrame;
+    return newFrame;
 }
 
 - (void)reachedTop {
@@ -172,9 +207,12 @@
     } else {
         [self removeGestureRecognizer:self.holdGestureRecognizer];
     }
+    if ([self.delegate respondsToSelector:@selector(view:reachedTop:)]) {
+        [self.delegate view:self reachedTop:self.frame.origin.y];
+    }
 }
 
-- (void)reachedBottom{
+- (void)reachedBottom {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     self.originatingAtTop = NO;
@@ -182,6 +220,9 @@
         [self removeGestureRecognizer:self.holdGestureRecognizer];
     } else {
         [self addGestureRecognizer:self.holdGestureRecognizer];
+    }
+    if ([self.delegate respondsToSelector:@selector(view:reachedBottom:)]) {
+        [self.delegate view:self reachedBottom:self.frame.origin.y];
     }
 }
 

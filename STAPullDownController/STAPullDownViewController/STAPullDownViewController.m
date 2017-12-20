@@ -10,9 +10,6 @@
 #import "UIView+STAUtils.h"
 #import "UIView+STAOrientation.h"
 
-//TODO: make this configurable
-#define kAutoSlideCompletionThreshold 30
-
 @interface STAPullDownViewController ()
 
 @property (nonatomic, assign) BOOL moveGestureBegan;
@@ -43,18 +40,25 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    // setup for both requires on each others toolbarHeight value, so set them up here
-    self.pullDownView.toolbarHeight = self.pullUpView.overlayOffset;
-    self.pullUpView.toolbarHeight = self.pullDownView.overlayOffset;
-    
-    if (self.pullDownView) {
-        self.pullDownView.isPullDownView = YES;
-        [self setUpPullDownView];
-    }
-    if (self.pullUpView) {
-        self.pullUpView.isPullDownView = NO;
-        [self setUpPullUpView];
-    }
+    static dispatch_once_t once;
+    dispatch_once(&once, ^ {
+        // setup for both requires on each others toolbarHeight value, so set them up here
+        if (self.pullDownView.toolbarHeight == 0) { // hasn't been set
+            self.pullDownView.toolbarHeight = self.pullUpView.overlayOffset;
+        }
+        if (self.pullUpView.toolbarHeight == 0) { // hasn't been set
+            self.pullUpView.toolbarHeight = self.pullDownView.overlayOffset;
+        }
+        
+        if (self.pullDownView) {
+            self.pullDownView.isPullDownView = YES;
+            [self setUpPullDownView];
+        }
+        if (self.pullUpView) {
+            self.pullUpView.isPullDownView = NO;
+            [self setUpPullUpView];
+        }
+    });
 }
 
 - (void)didReceiveMemoryWarning {
@@ -103,6 +107,57 @@
 
 #pragma mark - Pulldown Calculator Methods
 
+- (void)moveGestureBegan:(UIGestureRecognizer *)recognizer {
+    self.moveGestureBegan = YES;
+}
+
+- (void)moveGestureChanged:(UIGestureRecognizer *)recognizer {
+    STAPullableView *view = (STAPullableView *)recognizer.view;
+    [view viewDraggedTo:view.frame.origin.y];
+}
+
+- (void)moveGestureEnded:(UIGestureRecognizer *)recognizer {
+    STAPullableView *view = (STAPullableView *)recognizer.view;
+    [UIView animateWithDuration:0.43 delay:0.0 usingSpringWithDamping:0.85 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveLinear animations:^{
+        if ([view hasPassedAutoSlideThreshold]) {
+            // opposites here!
+            if (view.originatingAtTop) {
+                [view animateViewMoveDown];
+            } else { // bottom
+                [view animateViewMoveUp];
+            }
+        } else { // revert to same values here!
+            if (view.originatingAtTop) {
+                [view animateViewMoveUp];
+            } else { // bottom
+                [view animateViewMoveDown];
+            }
+        }
+        view.isMoving = YES;
+    } completion:^(BOOL finished) {
+        if (finished) {
+            if (view.prevHasPassedAutoSlideThresholdValue) {
+                // opposites here!
+                if (view.originatingAtTop) {
+                    [view animateViewMoveDown];
+                    [view reachedBottom];
+                } else { // bottom
+                    [view animateViewMoveUp];
+                    [view reachedTop];
+                }
+            } else { // revert to same values here!
+                if (view.originatingAtTop) {
+                    [view animateViewMoveUp];
+                } else { // bottom
+                    [view animateViewMoveDown];
+                }
+            }
+            view.isMoving = NO;
+        }
+    }];
+    [self performSelector:@selector(setMoveGestureBegan:) withObject:@NO afterDelay:0.01];
+}
+
 - (void)moveView:(UIPanGestureRecognizer *)recognizer {
     
     STAPullableView *view;
@@ -116,8 +171,6 @@
     CGPoint translation = [recognizer translationInView:self.view];
     CGFloat newCenterY = view.center.y + translation.y;
     
-//    NSLog(@"recognizer center: %f self view center: %f", recognizer.view.center.y, self.view.center.y - (48/2));
-//    CGFloat adBannerHeight = [(AppDelegate *)[[UIApplication sharedApplication] delegate] bannerViewHeight];
     if (view.isPullDownView) {
         if (view.frame.origin.y >= view.restingBottomYPos && translation.y > 0) {
             [view reachedBottom];
@@ -135,70 +188,22 @@
             return;
         }
     }
-    view.center = CGPointMake(view.center.x,
-                              newCenterY);
+    view.center = CGPointMake(view.center.x, newCenterY);
     [recognizer setTranslation:CGPointMake(0, 0) inView:self.view];
     
     if (recognizer.state == UIGestureRecognizerStateBegan) {
-        self.moveGestureBegan = YES;
-//        [self.mainViewController beganMovingPulldownCalculatorView];
-//        self.feedbackGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleMedium];
-//        [self.feedbackGenerator prepare];
+        [self moveGestureBegan:recognizer];
     } else if (recognizer.state == UIGestureRecognizerStateChanged) {
-        [view viewDragged:view.frame.origin.y];
-        
+        [self moveGestureChanged:recognizer];
     } else {
         if (recognizer.state == UIGestureRecognizerStateCancelled
             || recognizer.state == UIGestureRecognizerStateFailed
             || recognizer.state == UIGestureRecognizerStateEnded)
         {
-            [UIView animateWithDuration:0.43 delay:0.0 usingSpringWithDamping:0.85 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveLinear animations:^{
-                if ([view hasPassedAutoSlideThreshold]) {
-                    // opposites here!
-                    if (view.originatingAtTop) {
-                        [view animateViewMoveDown];
-                    } else { // bottom
-                        [view animateViewMoveUp];
-                    }
-                } else { // revert to same values here!
-                    if (view.originatingAtTop) {
-                        [view animateViewMoveUp];
-                    } else { // bottom
-                        [view animateViewMoveDown];
-                    }
-                }
-                view.isMoving = YES;
-            } completion:^(BOOL finished) {
-                if (finished) {
-                    if (view.prevHasPassedAutoSlideThresholdValue) {
-                        // opposites here!
-                        if (view.originatingAtTop) {
-                            [view animateViewMoveDown];
-                            [view reachedBottom];
-                        } else { // bottom
-                            [view animateViewMoveUp];
-                            [view reachedTop];
-                        }
-                    } else { // revert to same values here!
-                        if (view.originatingAtTop) {
-                            [view animateViewMoveUp];
-                        } else { // bottom
-                            [view animateViewMoveDown];
-                        }
-                    }
-                    view.isMoving = NO;
-//                    self.feedbackGenerator = nil;
-                }
-            }];
-            [self performSelector:@selector(setMoveGestureBegan:) withObject:@NO afterDelay:0.01];
-//            [self performSelector:@selector(impactOccurred) withObject:nil afterDelay:0.18];
+            [self moveGestureEnded:recognizer];
         }
-    } // else
+    }
 }
-
-//- (void)impactOccurred {
-//    [self.feedbackGenerator impactOccurred];
-//}
 
 - (void)viewHeldGestureEnded:(UILongPressGestureRecognizer *)recognizer {
     
@@ -219,7 +224,7 @@
         }
         view.frame = newFrame;
         
-        [view viewDragged:recognizer.view.frame.origin.y];
+        [view viewDraggedTo:recognizer.view.frame.origin.y];
     } completion:^(BOOL finished) {
         
     }];
@@ -242,7 +247,7 @@
                     newFrame.origin.y += 20;
                     view.frame = newFrame;
                     
-                    [view viewDragged:recognizer.view.frame.origin.y];
+                    [view viewDraggedTo:recognizer.view.frame.origin.y];
                 } completion:^(BOOL finished) {
                     
                 }];
@@ -254,7 +259,7 @@
                     newFrame.origin.y -= 20;
                     view.frame = newFrame;
                     
-                    [view viewDragged:recognizer.view.frame.origin.y];
+                    [view viewDraggedTo:recognizer.view.frame.origin.y];
                 } completion:^(BOOL finished) {
                     
                 }];
@@ -285,7 +290,7 @@
             }
         }
     }
-}
+} // viewHeld:
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
 shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer

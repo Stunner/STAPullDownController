@@ -42,20 +42,37 @@
 @property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
 @property (nonatomic, strong) UILongPressGestureRecognizer *holdGestureRecognizer;
 
+@property (nullable, nonatomic, weak) id delegate;
 
 - (void)setupFrame;
-- (void)setupWithController:(STAPullDownViewController *)controller;
+- (void)setupWithController:(STAPullDownViewController * _Nonnull)controller;
 
-- (void)viewDragged:(CGFloat)yPos;
+- (void)setupView;
+
+/**
+ Animates view down if up and vice versa.
+ */
+- (void)toggleView;
+
+- (void)viewDraggedTo:(CGFloat)yPos;
 
 - (BOOL)hasPassedAutoSlideThreshold;
 
-- (void)animateViewMoveUp;
+- (CGRect)animateViewMoveUp;
 
-- (void)animateViewMoveDown;
+- (CGRect)animateViewMoveDown;
 
 - (void)reachedTop;
 
 - (void)reachedBottom;
+
+@end
+
+@protocol STAPullableViewDelegate <NSObject>
+
+@optional
+- (void)view:(STAPullableView * _Nonnull)view draggedTo:(CGFloat)yPos;
+- (void)view:(STAPullableView * _Nonnull)view reachedTop:(CGFloat)yPos;
+- (void)view:(STAPullableView * _Nonnull)view reachedBottom:(CGFloat)yPos;
 
 @end
