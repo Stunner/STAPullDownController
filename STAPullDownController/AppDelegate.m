@@ -25,25 +25,17 @@
 //    pullDownViewController.mainViewController = viewController;
     
     ViewController *viewController = [[ViewController alloc] initWithNibName:@"ViewController" bundle:nil];
-    STAPullDownViewController *pullDownViewController = [[STAPullDownViewController alloc] init];
-    pullDownViewController.mainViewController = viewController;
+    self.pullDownViewController = [[STAPullDownViewController alloc] init];
+    self.pullDownViewController.mainViewController = viewController;
     
     // ivar pullDownView has been connected via IBOutlet, load that here
     [[NSBundle mainBundle] loadNibNamed:@"PullDownView"
-                                  owner:pullDownViewController
+                                  owner:self.pullDownViewController
                                 options:nil];
     // specify any additional options for the pull down view...
-    pullDownViewController.pullDownView.slideInset = 45;
-    
-    // create ivar pullUpView programmatically
-    STAPullableView *pullUpView = [[STAPullableView alloc] init];
-    pullUpView.frame = CGRectMake(0, 0, 375, 667);
-    pullUpView.backgroundColor = [UIColor blueColor];
-    pullUpView.overlayOffset = 45;
-    pullUpView.slideInset = 65;
-    pullDownViewController.pullUpView = pullUpView;
-    
-    self.window.rootViewController = pullDownViewController;
+    self.pullDownViewController.pullDownView.slideInset = 45;
+        
+    self.window.rootViewController = self.pullDownViewController;
     
     return YES;
 }

@@ -7,6 +7,8 @@
 //
 
 #import "ViewController.h"
+#import "STAPullDownViewController.h"
+#import "AppDelegate.h"
 
 @interface ViewController ()
 
@@ -18,6 +20,16 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
+    // create ivar pullUpView programmatically
+    STAPullableView *pullUpView = [[STAPullableView alloc] init];
+//    pullUpView.frame = CGRectZero;
+    //    pullUpView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 667);
+    pullUpView.backgroundColor = [UIColor blueColor];
+    pullUpView.overlayOffset = 45;
+//    pullUpView.slideInset = 65;
+    AppDelegate *appDelegate = (AppDelegate  *)[[UIApplication sharedApplication] delegate];
+    appDelegate.pullDownViewController.pullUpView = pullUpView;
+
 }
 
 

@@ -13,6 +13,7 @@
 
 @property (nonatomic, assign, readwrite) CGFloat initialYPosition;
 @property (nonatomic, weak) STAPullDownViewController *controller;
+@property (nonatomic, assign) BOOL setupComplete;
 
 @end
 
@@ -23,6 +24,7 @@
     self.overlayOffset = 65;
     self.autoSlideCompletionThreshold = 30;
     self.originatingAtTop = YES;
+    self.setupComplete = NO;
 }
 
 - (instancetype)init {
@@ -48,14 +50,16 @@
 
 - (void)setSlideInset:(CGFloat)slideInset {
     _slideInset = slideInset;
-    [self setupFrame];
+    if (self.setupComplete) {
+        [self setupFrame];
+    }
 }
 
 - (void)setupFrame {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     CGRect pullableViewFrame = self.frame;
-    if (CGRectEqualToRect(self.frame, CGRectZero)) {
+    if (CGRectEqualToRect(pullableViewFrame, CGRectZero)) {
         pullableViewFrame = self.controller.view.bounds;
     }
     
@@ -69,19 +73,21 @@
     }
     
     if (self.isPullDownView) {
+        NSLog(@"pull down view! %@", NSStringFromCGRect(pullableViewFrame));
         self.originatingAtTop = YES;
         self.initialYPosition = 0 - pullableViewFrame.size.height + self.overlayOffset;
         
         self.restingBottomYPos = self.initialYPosition + pullableViewFrame.size.height - self.overlayOffset;
         // if pull up view is tall enough to conceal bottom bar...
         if (self.restingBottomYPos + pullableViewFrame.size.height >
-            self.controller.view.frame.size.height - self.toolbarHeight  - self.slideInset)
+            self.controller.view.frame.size.height - self.toolbarHeight - self.slideInset)
         {
             // ...dont let it overlap
             self.restingBottomYPos = self.controller.view.bounds.size.height - self.toolbarHeight -
                                         pullableViewFrame.size.height - self.slideInset;
         }
     } else {
+        NSLog(@"pull up view! %@", NSStringFromCGRect(pullableViewFrame));
         self.originatingAtTop = NO;
         self.initialYPosition = self.controller.view.bounds.size.height - self.overlayOffset;
         
@@ -92,6 +98,7 @@
     }
     
     pullableViewFrame.origin.y = self.initialYPosition;
+    NSLog(@"finalized frame: %@", NSStringFromCGRect(pullableViewFrame));
     self.frame = pullableViewFrame;
 }
 
@@ -111,7 +118,7 @@
     self.panGestureRecognizer.delegate = controller;
     [self addGestureRecognizer:self.panGestureRecognizer];
     
-    
+    self.setupComplete = YES;
 }
 
 - (void)setupView {

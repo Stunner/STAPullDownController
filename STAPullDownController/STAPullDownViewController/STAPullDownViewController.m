@@ -42,6 +42,7 @@
     
     static dispatch_once_t once;
     dispatch_once(&once, ^ {
+        //--------------------------------------------------------------------------------
         // setup for both requires on each others toolbarHeight value, so set them up here
         if (self.pullDownView.toolbarHeight == 0) { // hasn't been set
             self.pullDownView.toolbarHeight = self.pullUpView.overlayOffset;
@@ -49,6 +50,7 @@
         if (self.pullUpView.toolbarHeight == 0) { // hasn't been set
             self.pullUpView.toolbarHeight = self.pullDownView.overlayOffset;
         }
+        //--------------------------------------------------------------------------------
         
         if (self.pullDownView) {
             self.pullDownView.isPullDownView = YES;
