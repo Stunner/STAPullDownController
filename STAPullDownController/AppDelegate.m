@@ -20,10 +20,6 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-//    STAPullDownViewController *pullDownViewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil]
-//                                                instantiateViewControllerWithIdentifier:@"PullDownViewController"];
-//    pullDownViewController.mainViewController = viewController;
-    
     ViewController *viewController = [[ViewController alloc] initWithNibName:@"ViewController" bundle:nil];
     self.pullDownViewController = [[STAPullDownViewController alloc] init];
     self.pullDownViewController.mainViewController = viewController;

@@ -18,15 +18,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
     
     // create ivar pullUpView programmatically
     STAPullableView *pullUpView = [[STAPullableView alloc] init];
-//    pullUpView.frame = CGRectZero;
-    //    pullUpView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 667);
+    pullUpView.frame = CGRectZero; // pull up view should be sized to that of parent view controller view
+//    pullUpView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 367); // specify size of frame manually
     pullUpView.backgroundColor = [UIColor blueColor];
     pullUpView.overlayOffset = 45;
-//    pullUpView.slideInset = 65;
     AppDelegate *appDelegate = (AppDelegate  *)[[UIApplication sharedApplication] delegate];
     appDelegate.pullDownViewController.pullUpView = pullUpView;
 
