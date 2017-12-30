@@ -73,7 +73,6 @@
     }
     
     if (self.isPullDownView) {
-        NSLog(@"pull down view! %@", NSStringFromCGRect(pullableViewFrame));
         self.originatingAtTop = YES;
         self.initialYPosition = 0 - pullableViewFrame.size.height + self.overlayOffset;
         
@@ -87,7 +86,6 @@
                                         pullableViewFrame.size.height - self.slideInset;
         }
     } else {
-        NSLog(@"pull up view! %@", NSStringFromCGRect(pullableViewFrame));
         self.originatingAtTop = NO;
         self.initialYPosition = self.controller.view.bounds.size.height - self.overlayOffset;
         
@@ -98,7 +96,6 @@
     }
     
     pullableViewFrame.origin.y = self.initialYPosition;
-    NSLog(@"finalized frame: %@", NSStringFromCGRect(pullableViewFrame));
     self.frame = pullableViewFrame;
 }
 
