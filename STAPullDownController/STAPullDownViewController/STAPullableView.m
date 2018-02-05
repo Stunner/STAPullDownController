@@ -55,6 +55,12 @@
     }
 }
 
+- (void)layoutMarginsDidChange {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    [self setupFrame];
+}
+
 - (void)setupFrame {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
@@ -72,11 +78,13 @@
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     }
     
+    UIEdgeInsets layoutMargins = self.controller.view.window.layoutMargins;
+    
     if (self.isPullDownView) {
         self.originatingAtTop = YES;
-        self.initialYPosition = 0 - pullableViewFrame.size.height + self.overlayOffset;
+        self.initialYPosition = 0 - pullableViewFrame.size.height + self.overlayOffset + layoutMargins.top;
         
-        self.restingBottomYPos = self.initialYPosition + pullableViewFrame.size.height - self.overlayOffset;
+        self.restingBottomYPos = self.initialYPosition + pullableViewFrame.size.height - self.overlayOffset - layoutMargins.top;
         // if pull up view is tall enough to conceal bottom bar...
         if (self.restingBottomYPos + pullableViewFrame.size.height >
             self.controller.view.frame.size.height - self.toolbarHeight - self.slideInset)
@@ -87,9 +95,9 @@
         }
     } else {
         self.originatingAtTop = NO;
-        self.initialYPosition = self.controller.view.bounds.size.height - self.overlayOffset;
+        self.initialYPosition = self.controller.view.bounds.size.height - self.overlayOffset - layoutMargins.bottom;
         
-        self.restingTopYPos = self.initialYPosition - pullableViewFrame.size.height + self.overlayOffset;
+        self.restingTopYPos = self.initialYPosition - pullableViewFrame.size.height + self.overlayOffset + layoutMargins.bottom;
         if (self.restingTopYPos < self.toolbarHeight + self.slideInset) { // if pull up view is tall enough to conceal top bar...
             self.restingTopYPos = self.toolbarHeight + self.slideInset; // ...dont let it overlap
         }
