@@ -58,10 +58,10 @@
 - (void)setupFrame {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
-    CGRect pullableViewFrame = self.frame;
-    if (CGRectEqualToRect(pullableViewFrame, CGRectZero)) {
-        pullableViewFrame = self.controller.view.bounds;
-    }
+    CGRect pullableViewFrame = self.controller.view.bounds;
+//    if (CGRectEqualToRect(pullableViewFrame, CGRectZero)) {
+//        pullableViewFrame = self.controller.view.bounds;
+//    }
     
     // Only specify flexible height mask when view is at least as tall as controller so as to avoid
     // view growing absurdly tall. In addition, view will shrink if flexible height mask is specified
