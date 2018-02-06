@@ -85,21 +85,21 @@
         self.initialYPosition = 0 - pullableViewFrame.size.height + self.overlayOffset + layoutMargins.top;
         
         self.restingBottomYPos = self.initialYPosition + pullableViewFrame.size.height - self.overlayOffset - layoutMargins.top;
-        // if pull up view is tall enough to conceal bottom bar...
+        // if pull down view is tall enough to conceal bottom bar...
         if (self.restingBottomYPos + pullableViewFrame.size.height >
-            self.controller.view.frame.size.height - self.toolbarHeight - self.slideInset)
+            self.controller.view.frame.size.height - self.toolbarHeight - self.slideInset - layoutMargins.bottom)
         {
             // ...dont let it overlap
             self.restingBottomYPos = self.controller.view.bounds.size.height - self.toolbarHeight -
-                                        pullableViewFrame.size.height - self.slideInset;
+            pullableViewFrame.size.height - self.slideInset - layoutMargins.bottom;
         }
     } else {
         self.originatingAtTop = NO;
         self.initialYPosition = self.controller.view.bounds.size.height - self.overlayOffset - layoutMargins.bottom;
         
         self.restingTopYPos = self.initialYPosition - pullableViewFrame.size.height + self.overlayOffset + layoutMargins.bottom;
-        if (self.restingTopYPos < self.toolbarHeight + self.slideInset) { // if pull up view is tall enough to conceal top bar...
-            self.restingTopYPos = self.toolbarHeight + self.slideInset; // ...dont let it overlap
+        if (self.restingTopYPos < self.toolbarHeight + self.slideInset + layoutMargins.top) { // if pull up view is tall enough to conceal top bar...
+            self.restingTopYPos = self.toolbarHeight + self.slideInset + layoutMargins.top; // ...dont let it overlap
         }
     }
     
