@@ -23,6 +23,8 @@
  of the screen, and in the event this view is a pull up view, it would correspond to the height
  of the navigation bar).
  */
+// TODO: This should be auto calculated from a passed in toolbar reference. Rename to opposingToolbarHeight.
+//       Calc using [self.toolbar topmostEdge] and [self.toolbar bottommostEdge]
 @property (nonatomic, assign) CGFloat toolbarHeight;
 /**
  Denotes the amount of space to stop short by when dragged. In other words, padding above or below
