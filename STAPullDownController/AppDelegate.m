@@ -20,18 +20,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-    ViewController *viewController = [[ViewController alloc] initWithNibName:@"ViewController" bundle:nil];
-    self.pullDownViewController = [[STAPullDownViewController alloc] init];
-    self.pullDownViewController.mainViewController = viewController;
-    
-    // ivar pullDownView has been connected via IBOutlet, load that here
-    [[NSBundle mainBundle] loadNibNamed:@"PullDownView"
-                                  owner:self.pullDownViewController
-                                options:nil];
-    // specify any additional options for the pull down view...
-    self.pullDownViewController.pullDownView.slideInset = 45;
-        
-    self.window.rootViewController = self.pullDownViewController;
+//
+//    self.window.rootViewController = self.pullDownViewController;
     
     return YES;
 }

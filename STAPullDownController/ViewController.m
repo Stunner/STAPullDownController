@@ -19,17 +19,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // create ivar pullUpView programmatically
-    STAPullableView *pullUpView = [[STAPullableView alloc] init];
-    pullUpView.frame = CGRectZero; // pull up view should be sized to that of parent view controller view
-//    pullUpView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 367); // specify size of frame manually
-    pullUpView.backgroundColor = [UIColor blueColor];
-    pullUpView.overlayOffset = 45;
-    AppDelegate *appDelegate = (AppDelegate  *)[[UIApplication sharedApplication] delegate];
-    appDelegate.pullDownViewController.pullUpView = pullUpView;
+    
 
 }
 
+- (IBAction)backButtonPressed:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
