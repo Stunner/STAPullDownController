@@ -10,7 +10,9 @@
 #import "UIView+STAUtils.h"
 #import "UIView+STAOrientation.h"
 
-@interface STAPullDownViewController ()
+@interface STAPullDownViewController () {
+    dispatch_once_t _once;
+}
 
 @property (nonatomic, assign) BOOL moveGestureBegan;
 
@@ -20,7 +22,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
     
     if (self.mainViewController) {
         [self addChildViewController:self.mainViewController];
@@ -40,8 +41,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    static dispatch_once_t once;
-    dispatch_once(&once, ^ {
+    // runs once per instance of controller
+    dispatch_once(&_once, ^ {
         //--------------------------------------------------------------------------------
         // setup for both requires on each others toolbarHeight value, so set them up here
         if (self.pullDownView.toolbarHeight == 0) { // hasn't been set
