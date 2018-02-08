@@ -20,7 +20,18 @@
     [super viewDidLoad];
     
     
+}
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    self.navigationController.toolbarHidden = !self.showsToolbar;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (IBAction)backButtonPressed:(id)sender {

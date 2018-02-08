@@ -13,6 +13,8 @@
 @interface RootTableViewController ()
 
 @property (strong, nonatomic) STAPullDownViewController *pullDownViewController;
+@property (strong, nonatomic) STAPullDownViewController *pullDownAndToolbarController;
+@property (strong, nonatomic) STAPullDownViewController *pullUpAndNavController;
 
 @end
 
@@ -81,6 +83,48 @@
         }
 
         [self presentViewController:self.pullDownViewController animated:YES completion:nil];
+    } else if (indexPath.row == 1) {
+        if (!self.pullDownAndToolbarController) {
+            ViewController *viewController = [[ViewController alloc] initWithNibName:@"ViewController" bundle:nil];
+            viewController.showsToolbar = YES;
+            self.pullDownAndToolbarController = [[STAPullDownViewController alloc] init];
+            self.pullDownAndToolbarController.mainViewController = viewController;
+            
+            // ivar pullDownView has been connected via IBOutlet, load that here
+            [[NSBundle mainBundle] loadNibNamed:@"PullDownView"
+                                          owner:self.pullDownAndToolbarController
+                                        options:nil];
+//            STAPullableView *pullDownView = [[STAPullableView alloc] init];
+//            pullDownView.frame = CGRectZero; // pull up view should be sized to that of parent view controller view
+//            pullDownView.backgroundColor = [UIColor redColor];
+            self.pullDownAndToolbarController.pullDownView.overlayOffset = 45;
+//            self.pullDownAndToolbarController.pullDownView = pullDownView;
+            
+            
+//            self.navigationController.toolbarHidden = NO;
+            
+        }
+        
+        [self.navigationController pushViewController:self.pullDownAndToolbarController animated:YES];
+    } else if (indexPath.row == 2) {
+        if (!self.pullUpAndNavController) {
+            ViewController *viewController = [[ViewController alloc] initWithNibName:@"ViewController" bundle:nil];
+            self.pullUpAndNavController = [[STAPullDownViewController alloc] init];
+            self.pullUpAndNavController.mainViewController = viewController;
+            
+            // create ivar pullUpView programmatically
+            STAPullableView *pullUpView = [[STAPullableView alloc] init];
+            pullUpView.frame = CGRectZero; // pull up view should be sized to that of parent view controller view
+            pullUpView.backgroundColor = [UIColor blueColor];
+            pullUpView.overlayOffset = 45;
+            self.pullUpAndNavController.pullUpView = pullUpView;
+            
+            
+//            self.navigationController.toolbarHidden = YES;
+            
+        }
+        
+        [self.navigationController pushViewController:self.pullUpAndNavController animated:YES];
     }
 }
 
