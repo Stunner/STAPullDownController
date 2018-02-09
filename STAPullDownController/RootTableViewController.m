@@ -97,7 +97,8 @@
 //            STAPullableView *pullDownView = [[STAPullableView alloc] init];
 //            pullDownView.frame = CGRectZero; // pull up view should be sized to that of parent view controller view
 //            pullDownView.backgroundColor = [UIColor redColor];
-            self.pullDownAndToolbarController.pullDownView.overlayOffset = 45;
+            self.pullDownAndToolbarController.pullDownView.overlayOffset = 70;
+            self.pullDownAndToolbarController.pullDownView.toolbarHeight = 42;
 //            self.pullDownAndToolbarController.pullDownView = pullDownView;
             
             
@@ -117,6 +118,7 @@
             pullUpView.frame = CGRectZero; // pull up view should be sized to that of parent view controller view
             pullUpView.backgroundColor = [UIColor blueColor];
             pullUpView.overlayOffset = 45;
+            pullUpView.toolbarHeight = 36;
             self.pullUpAndNavController.pullUpView = pullUpView;
             
             
