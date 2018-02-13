@@ -122,6 +122,7 @@
 - (void)moveGestureEnded:(UIGestureRecognizer *)recognizer {
     STAPullableView *view = (STAPullableView *)recognizer.view;
     [UIView animateWithDuration:0.43 delay:0.0 usingSpringWithDamping:0.85 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveLinear animations:^{
+        view.isMoving = YES;
         if ([view hasPassedAutoSlideThreshold]) {
             // opposites here!
             if (view.originatingAtTop) {
@@ -136,7 +137,6 @@
                 [view animateViewMoveDown];
             }
         }
-        view.isMoving = YES;
     } completion:^(BOOL finished) {
         if (finished) {
             if (view.prevHasPassedAutoSlideThresholdValue) {

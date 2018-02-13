@@ -118,7 +118,7 @@
             pullUpView.frame = CGRectZero; // pull up view should be sized to that of parent view controller view
             pullUpView.backgroundColor = [UIColor blueColor];
             pullUpView.overlayOffset = 45;
-            pullUpView.toolbarHeight = 36;
+            pullUpView.toolbarHeight = 44;
             self.pullUpAndNavController.pullUpView = pullUpView;
             
             

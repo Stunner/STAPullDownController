@@ -14,6 +14,7 @@
 @property (nonatomic, assign, readwrite) CGFloat initialYPosition;
 @property (nonatomic, weak) STAPullDownViewController *controller;
 @property (nonatomic, assign) BOOL setupComplete;
+@property (nonatomic, assign) BOOL interactionOccurred;
 
 @end
 
@@ -23,8 +24,9 @@
     self.toolbarHeight = 0;
     self.overlayOffset = 65;
     self.autoSlideCompletionThreshold = 30;
-    self.originatingAtTop = YES;
+//    self.originatingAtTop = self.isPullDownView;
     self.setupComplete = NO;
+    self.interactionOccurred = NO;
 }
 
 - (instancetype)init {
@@ -48,6 +50,17 @@
     return self;
 }
 
+- (void)didMoveToSuperview {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+}
+
+- (void)didMoveToWindow {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    [self setupFrame];
+//    self.interactionOccurred = NO;
+}
+
 - (void)setSlideInset:(CGFloat)slideInset {
     _slideInset = slideInset;
     if (self.setupComplete) {
@@ -55,10 +68,17 @@
     }
 }
 
+- (void)setIsPullDownView:(BOOL)isPullDownView {
+    self.originatingAtTop = isPullDownView;
+    _isPullDownView = isPullDownView;
+}
+
 - (void)layoutMarginsDidChange {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
-    [self setupFrame];
+//    if (!self.interactionOccurred) {
+//        [self setupFrame];
+//    }
 }
 
 - (void)setupFrame {
@@ -130,14 +150,19 @@
     // empty method meant to be subclassed
 }
 
+- (void)userInteractionOccurred {
+    self.interactionOccurred = YES;
+}
+
 - (void)toggleView {
+    [self userInteractionOccurred];
     [UIView animateWithDuration:0.43 delay:0.0 usingSpringWithDamping:0.85 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveLinear animations:^{
+        self.isMoving = YES;
         if (self.originatingAtTop) {
             [self animateViewMoveDown];
         } else { // bottom
             [self animateViewMoveUp];
         }
-        self.isMoving = YES;
     } completion:^(BOOL finished) {
         if (finished) {
             if (self.originatingAtTop) {
@@ -153,6 +178,7 @@
 }
 
 - (void)viewDraggedTo:(CGFloat)yPos {
+    [self userInteractionOccurred];
     if ([self.delegate respondsToSelector:@selector(view:draggedTo:)]) {
         [self.delegate view:self draggedTo:yPos];
     }
