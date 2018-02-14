@@ -24,7 +24,6 @@
     self.toolbarHeight = 0;
     self.overlayOffset = 65;
     self.autoSlideCompletionThreshold = 30;
-//    self.originatingAtTop = self.isPullDownView;
     self.setupComplete = NO;
     self.interactionOccurred = NO;
 }
@@ -52,13 +51,14 @@
 
 - (void)didMoveToSuperview {
     NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    
 }
 
 - (void)didMoveToWindow {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     [self setupFrame];
-//    self.interactionOccurred = NO;
 }
 
 - (void)setSlideInset:(CGFloat)slideInset {
@@ -76,18 +76,13 @@
 - (void)layoutMarginsDidChange {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
-//    if (!self.interactionOccurred) {
-//        [self setupFrame];
-//    }
+    
 }
 
 - (void)setupFrame {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     CGRect pullableViewFrame = self.controller.view.bounds;
-//    if (CGRectEqualToRect(pullableViewFrame, CGRectZero)) {
-//        pullableViewFrame = self.controller.view.bounds;
-//    }
     
     // Only specify flexible height mask when view is at least as tall as controller so as to avoid
     // view growing absurdly tall. In addition, view will shrink if flexible height mask is specified

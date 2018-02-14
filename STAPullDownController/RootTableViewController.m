@@ -94,19 +94,10 @@
             [[NSBundle mainBundle] loadNibNamed:@"PullDownView"
                                           owner:self.pullDownAndToolbarController
                                         options:nil];
-//            STAPullableView *pullDownView = [[STAPullableView alloc] init];
-//            pullDownView.frame = CGRectZero; // pull up view should be sized to that of parent view controller view
-//            pullDownView.backgroundColor = [UIColor redColor];
             self.pullDownAndToolbarController.pullDownView.overlayOffset = 70;
             self.pullDownAndToolbarController.pullDownView.toolbarHeight = 42;
             self.pullDownAndToolbarController.pullDownView.opposingBar = self.navigationController.toolbar;
-//            self.pullDownAndToolbarController.pullDownView = pullDownView;
-            
-            
-//            self.navigationController.toolbarHidden = NO;
-            
         }
-        
         [self.navigationController pushViewController:self.pullDownAndToolbarController animated:YES];
     } else if (indexPath.row == 2) {
         if (!self.pullUpAndNavController) {
@@ -122,10 +113,6 @@
             pullUpView.toolbarHeight = 44;
             pullUpView.opposingBar = self.navigationController.navigationBar;
             self.pullUpAndNavController.pullUpView = pullUpView;
-            
-            
-//            self.navigationController.toolbarHidden = YES;
-            
         }
         
         [self.navigationController pushViewController:self.pullUpAndNavController animated:YES];
