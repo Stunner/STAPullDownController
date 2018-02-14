@@ -99,6 +99,7 @@
 //            pullDownView.backgroundColor = [UIColor redColor];
             self.pullDownAndToolbarController.pullDownView.overlayOffset = 70;
             self.pullDownAndToolbarController.pullDownView.toolbarHeight = 42;
+            self.pullDownAndToolbarController.pullDownView.opposingBar = self.navigationController.toolbar;
 //            self.pullDownAndToolbarController.pullDownView = pullDownView;
             
             
@@ -119,6 +120,7 @@
             pullUpView.backgroundColor = [UIColor blueColor];
             pullUpView.overlayOffset = 45;
             pullUpView.toolbarHeight = 44;
+            pullUpView.opposingBar = self.navigationController.navigationBar;
             self.pullUpAndNavController.pullUpView = pullUpView;
             
             
