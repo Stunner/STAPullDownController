@@ -27,6 +27,10 @@
 //       Calc using [self.toolbar topmostEdge] and [self.toolbar bottommostEdge]
 @property (nonatomic, assign) CGFloat toolbarHeight;
 /**
+ Opposing tool bar or navigation bar. Used to determine toolbarHeight.
+ */
+@property (nullable, nonatomic, weak) UIView *opposingBar;
+/**
  Denotes the amount of space to stop short by when dragged. In other words, padding above or below
  the normal endpoint denoted by toolbarHeight. This is useful when attempting to avoid concealing 
  an ad bar above the toolbar, for instance.

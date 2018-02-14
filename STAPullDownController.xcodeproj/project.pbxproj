@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		932FC18E1E98D7CA005D77B1 /* STAPullDownViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 932FC18D1E98D7CA005D77B1 /* STAPullDownViewController.m */; };
 		932FC1971E98DAE7005D77B1 /* STAPullableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 932FC1961E98DAE7005D77B1 /* STAPullableView.m */; };
+		93659CAA202A81B7007C6CF0 /* RootTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93659CA9202A81B7007C6CF0 /* RootTableViewController.m */; };
 		93C0D1221E88CB8D009FD0E0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C0D1211E88CB8D009FD0E0 /* main.m */; };
 		93C0D1251E88CB8D009FD0E0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C0D1241E88CB8D009FD0E0 /* AppDelegate.m */; };
 		93C0D1281E88CB8D009FD0E0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C0D1271E88CB8D009FD0E0 /* ViewController.m */; };
@@ -46,6 +47,8 @@
 		932FC18D1E98D7CA005D77B1 /* STAPullDownViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STAPullDownViewController.m; sourceTree = "<group>"; };
 		932FC1951E98DAE7005D77B1 /* STAPullableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STAPullableView.h; sourceTree = "<group>"; };
 		932FC1961E98DAE7005D77B1 /* STAPullableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STAPullableView.m; sourceTree = "<group>"; };
+		93659CA8202A81B7007C6CF0 /* RootTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RootTableViewController.h; sourceTree = "<group>"; };
+		93659CA9202A81B7007C6CF0 /* RootTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RootTableViewController.m; sourceTree = "<group>"; };
 		93C0D11D1E88CB8D009FD0E0 /* STAPullDownController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = STAPullDownController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93C0D1211E88CB8D009FD0E0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		93C0D1231E88CB8D009FD0E0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -146,6 +149,8 @@
 				93C0D15A1E8F6F3E009FD0E0 /* PullDownView.h */,
 				93C0D15B1E8F6F3E009FD0E0 /* PullDownView.m */,
 				93C0D15D1E8F6F5A009FD0E0 /* PullDownView.xib */,
+				93659CA8202A81B7007C6CF0 /* RootTableViewController.h */,
+				93659CA9202A81B7007C6CF0 /* RootTableViewController.m */,
 			);
 			path = STAPullDownController;
 			sourceTree = "<group>";
@@ -328,6 +333,7 @@
 				93C0D1281E88CB8D009FD0E0 /* ViewController.m in Sources */,
 				93D99AEF1EA461A3005B1322 /* UIView+STAUtils.m in Sources */,
 				93D99AEE1EA461A3005B1322 /* UIView+STAOrientation.m in Sources */,
+				93659CAA202A81B7007C6CF0 /* RootTableViewController.m in Sources */,
 				932FC18E1E98D7CA005D77B1 /* STAPullDownViewController.m in Sources */,
 				93C0D15C1E8F6F3E009FD0E0 /* PullDownView.m in Sources */,
 				932FC1971E98DAE7005D77B1 /* STAPullableView.m in Sources */,

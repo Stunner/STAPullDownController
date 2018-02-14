@@ -10,7 +10,9 @@
 #import "UIView+STAUtils.h"
 #import "UIView+STAOrientation.h"
 
-@interface STAPullDownViewController ()
+@interface STAPullDownViewController () {
+    dispatch_once_t _once;
+}
 
 @property (nonatomic, assign) BOOL moveGestureBegan;
 
@@ -20,7 +22,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
     
     if (self.mainViewController) {
         [self addChildViewController:self.mainViewController];
@@ -40,8 +41,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    static dispatch_once_t once;
-    dispatch_once(&once, ^ {
+    // runs once per instance of controller
+    dispatch_once(&_once, ^ {
         //--------------------------------------------------------------------------------
         // setup for both requires on each others toolbarHeight value, so set them up here
         if (self.pullDownView.toolbarHeight == 0) { // hasn't been set
@@ -121,6 +122,7 @@
 - (void)moveGestureEnded:(UIGestureRecognizer *)recognizer {
     STAPullableView *view = (STAPullableView *)recognizer.view;
     [UIView animateWithDuration:0.43 delay:0.0 usingSpringWithDamping:0.85 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveLinear animations:^{
+        view.isMoving = YES;
         if ([view hasPassedAutoSlideThreshold]) {
             // opposites here!
             if (view.originatingAtTop) {
@@ -135,7 +137,6 @@
                 [view animateViewMoveDown];
             }
         }
-        view.isMoving = YES;
     } completion:^(BOOL finished) {
         if (finished) {
             if (view.prevHasPassedAutoSlideThresholdValue) {

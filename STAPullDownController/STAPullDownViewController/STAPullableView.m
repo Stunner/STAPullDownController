@@ -14,6 +14,7 @@
 @property (nonatomic, assign, readwrite) CGFloat initialYPosition;
 @property (nonatomic, weak) STAPullDownViewController *controller;
 @property (nonatomic, assign) BOOL setupComplete;
+@property (nonatomic, assign) BOOL interactionOccurred;
 
 @end
 
@@ -23,8 +24,8 @@
     self.toolbarHeight = 0;
     self.overlayOffset = 65;
     self.autoSlideCompletionThreshold = 30;
-    self.originatingAtTop = YES;
     self.setupComplete = NO;
+    self.interactionOccurred = NO;
 }
 
 - (instancetype)init {
@@ -48,6 +49,18 @@
     return self;
 }
 
+- (void)didMoveToSuperview {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    
+}
+
+- (void)didMoveToWindow {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    [self setupFrame];
+}
+
 - (void)setSlideInset:(CGFloat)slideInset {
     _slideInset = slideInset;
     if (self.setupComplete) {
@@ -55,19 +68,21 @@
     }
 }
 
+- (void)setIsPullDownView:(BOOL)isPullDownView {
+    self.originatingAtTop = isPullDownView;
+    _isPullDownView = isPullDownView;
+}
+
 - (void)layoutMarginsDidChange {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
-    [self setupFrame];
+    
 }
 
 - (void)setupFrame {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     CGRect pullableViewFrame = self.controller.view.bounds;
-//    if (CGRectEqualToRect(pullableViewFrame, CGRectZero)) {
-//        pullableViewFrame = self.controller.view.bounds;
-//    }
     
     // Only specify flexible height mask when view is at least as tall as controller so as to avoid
     // view growing absurdly tall. In addition, view will shrink if flexible height mask is specified
@@ -80,6 +95,9 @@
     
     UIEdgeInsets layoutMargins = self.controller.view.window.layoutMargins;
     
+    if (self.opposingBar) {
+        self.toolbarHeight = self.opposingBar.frame.size.height - 8;
+    }
     if (self.isPullDownView) {
         self.originatingAtTop = YES;
         self.initialYPosition = 0 - pullableViewFrame.size.height + self.overlayOffset + layoutMargins.top;
@@ -94,6 +112,8 @@
             pullableViewFrame.size.height - self.slideInset - layoutMargins.bottom;
         }
     } else {
+        self.toolbarHeight += [UIApplication sharedApplication].statusBarFrame.size.height;
+        
         self.originatingAtTop = NO;
         self.initialYPosition = self.controller.view.bounds.size.height - self.overlayOffset - layoutMargins.bottom;
         
@@ -130,14 +150,19 @@
     // empty method meant to be subclassed
 }
 
+- (void)userInteractionOccurred {
+    self.interactionOccurred = YES;
+}
+
 - (void)toggleView {
+    [self userInteractionOccurred];
     [UIView animateWithDuration:0.43 delay:0.0 usingSpringWithDamping:0.85 initialSpringVelocity:0.5 options:UIViewAnimationOptionCurveLinear animations:^{
+        self.isMoving = YES;
         if (self.originatingAtTop) {
             [self animateViewMoveDown];
         } else { // bottom
             [self animateViewMoveUp];
         }
-        self.isMoving = YES;
     } completion:^(BOOL finished) {
         if (finished) {
             if (self.originatingAtTop) {
@@ -153,6 +178,7 @@
 }
 
 - (void)viewDraggedTo:(CGFloat)yPos {
+    [self userInteractionOccurred];
     if ([self.delegate respondsToSelector:@selector(view:draggedTo:)]) {
         [self.delegate view:self draggedTo:yPos];
     }
