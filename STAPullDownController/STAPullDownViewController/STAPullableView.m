@@ -95,10 +95,10 @@
     
     UIEdgeInsets layoutMargins = self.controller.view.window.layoutMargins;
     
-    if (self.opposingBar) {
-        self.toolbarHeight = self.opposingBar.frame.size.height - 8;
-    }
     if (self.isPullDownView) {
+        if (self.opposingBar) {
+            self.toolbarHeight = self.opposingBar.frame.size.height - layoutMargins.bottom;
+        }
         self.originatingAtTop = YES;
         self.initialYPosition = 0 - pullableViewFrame.size.height + self.overlayOffset + layoutMargins.top;
         
@@ -112,7 +112,12 @@
             pullableViewFrame.size.height - self.slideInset - layoutMargins.bottom;
         }
     } else {
-        self.toolbarHeight += [UIApplication sharedApplication].statusBarFrame.size.height;
+        
+        if (self.opposingBar) {
+            self.toolbarHeight = self.opposingBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height - layoutMargins.top;
+        } else {
+            self.toolbarHeight = [UIApplication sharedApplication].statusBarFrame.size.height - layoutMargins.top;
+        }
         
         self.originatingAtTop = NO;
         self.initialYPosition = self.controller.view.bounds.size.height - self.overlayOffset - layoutMargins.bottom;
