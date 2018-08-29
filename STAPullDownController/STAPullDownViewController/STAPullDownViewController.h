@@ -9,18 +9,38 @@
 #import <UIKit/UIKit.h>
 #import "STAPullableView.h"
 
+/**
+ Intended to be subclassed.
+ */
 @interface STAPullDownViewController : UIViewController <UIGestureRecognizerDelegate>
 
-@property (nonnull, nonatomic, strong) id mainViewController; // must either be UIViewController or UITableViewController
+/**
+ Must be an instance of UIViewController or UITableViewController.
+ */
+@property (nonnull, nonatomic, strong) id mainViewController;
+/**
+ View that hangs from the top of the screen and can be pulled down.
+ 
+ IBOutlet placed here for convenience.
+ */
 @property (nullable, nonatomic, strong) IBOutlet STAPullableView *pullDownView;
+/**
+ View that hangs from the bottom of the screen and can be pulled up.
+ 
+ IBOutlet placed here for convenience.
+ */
 @property (nullable, nonatomic, strong) IBOutlet STAPullableView *pullUpView;
-//@property (nullable, nonatomic, weak) UIToolbar *toolbar;
 
+//////////////////////////////////////////////////////////////////////
+/**
+ Overridable methods. Must call super's implementation at some point.
+ */
 - (void)moveGestureBegan:(UIGestureRecognizer  * _Nonnull )recognizer;
 - (void)moveGestureChanged:(UIGestureRecognizer * _Nonnull)recognizer;
 - (void)moveGestureEnded:(UIGestureRecognizer * _Nonnull)recognizer;
 
 - (void)moveView:(UIPanGestureRecognizer *)recognizer;
 - (void)viewHeld:(UILongPressGestureRecognizer *)recognizer;
+//////////////////////////////////////////////////////////////////////
 
 @end
