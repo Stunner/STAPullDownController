@@ -36,14 +36,15 @@
  an ad bar above the toolbar, for instance.
  */
 @property (nonatomic, assign) CGFloat slideInset;
-@property (nonatomic, assign, readonly) CGFloat initialYPosition;
 @property (nonatomic, assign) CGFloat autoSlideCompletionThreshold;
 @property (nonatomic, assign) BOOL originatingAtTop;
 @property (nonatomic, assign) BOOL isMoving;
 @property (nonatomic, assign) BOOL isPullDownView;
 @property (nonatomic, assign) BOOL prevHasPassedAutoSlideThresholdValue;
-@property (nonatomic, assign) CGFloat restingBottomYPos;
-@property (nonatomic, assign) CGFloat restingTopYPos;
+
+@property (nonatomic, assign, readonly) CGFloat initialYPosition;
+@property (nonatomic, assign, readonly) CGFloat restingBottomYPos;
+@property (nonatomic, assign, readonly) CGFloat restingTopYPos;
 
 @property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
 @property (nonatomic, strong) UILongPressGestureRecognizer *holdGestureRecognizer;

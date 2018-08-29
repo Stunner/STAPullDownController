@@ -12,6 +12,9 @@
 @interface STAPullableView ()
 
 @property (nonatomic, assign, readwrite) CGFloat initialYPosition;
+@property (nonatomic, assign, readwrite) CGFloat restingBottomYPos;
+@property (nonatomic, assign, readwrite) CGFloat restingTopYPos;
+
 @property (nonatomic, weak) STAPullDownViewController *controller;
 @property (nonatomic, assign) BOOL setupComplete;
 @property (nonatomic, assign) BOOL interactionOccurred;
