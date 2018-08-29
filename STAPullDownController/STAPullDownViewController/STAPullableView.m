@@ -115,8 +115,6 @@
         
         if (self.opposingBar) {
             self.toolbarHeight = self.opposingBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height - layoutMargins.top;
-        } else {
-            self.toolbarHeight = [UIApplication sharedApplication].statusBarFrame.size.height - layoutMargins.top;
         }
         
         self.originatingAtTop = NO;
