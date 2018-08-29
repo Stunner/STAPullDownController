@@ -14,7 +14,7 @@
 
 /**
  Denotes how much space the pull up/down view should overlap the underlying view as a bar.
- (Can be thought of as tool bar or navigation bar height.) Defaults to 65.
+ (Can be thought of as the height of this view at rest.) Defaults to 65.
  */
 @property (nonatomic, assign) CGFloat overlayOffset;
 /**
