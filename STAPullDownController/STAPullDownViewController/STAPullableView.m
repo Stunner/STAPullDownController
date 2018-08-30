@@ -8,6 +8,7 @@
 
 #import "STAPullableView.h"
 #import "STAPullDownViewController.h"
+#import "UIView+STAUtils.h"
 
 @interface STAPullableView ()
 
@@ -100,19 +101,20 @@
     
     if (self.isPullDownView) {
         if (self.opposingBar) {
-            self.toolbarHeight = self.opposingBar.frame.size.height - layoutMargins.bottom;
+            self.toolbarHeight = [UIScreen mainScreen].bounds.size.height - [self.opposingBar topmostEdgePosition];
         }
         self.originatingAtTop = YES;
         self.initialYPosition = 0 - pullableViewFrame.size.height + self.overlayOffset + layoutMargins.top;
         
         self.restingBottomYPos = self.initialYPosition + pullableViewFrame.size.height - self.overlayOffset - layoutMargins.top;
         // if pull down view is tall enough to conceal bottom bar...
+        CGFloat notOpposingBarOffset = (!self.opposingBar) ? layoutMargins.bottom : 0;
         if (self.restingBottomYPos + pullableViewFrame.size.height >
-            self.controller.view.frame.size.height - self.toolbarHeight - self.slideInset - layoutMargins.bottom)
+            self.controller.view.frame.size.height - self.toolbarHeight - self.slideInset - notOpposingBarOffset)
         {
             // ...dont let it overlap
             self.restingBottomYPos = self.controller.view.bounds.size.height - self.toolbarHeight -
-            pullableViewFrame.size.height - self.slideInset - layoutMargins.bottom;
+                pullableViewFrame.size.height - self.slideInset - notOpposingBarOffset;
         }
     } else {
         
