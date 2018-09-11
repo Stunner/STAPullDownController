@@ -62,7 +62,9 @@
 - (void)didMoveToWindow {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
-    [self setupFrame];
+    if (self.window != nil) {
+        [self setupFrame];
+    }
 }
 
 - (void)setSlideInset:(CGFloat)slideInset {
@@ -100,10 +102,10 @@
     UIEdgeInsets layoutMargins = self.controller.view.window.layoutMargins;
     
     if (self.isPullDownView) {
+        
         if (self.opposingBar) {
             self.toolbarHeight = [UIScreen mainScreen].bounds.size.height - [self.opposingBar topmostEdgePosition];
         }
-        self.originatingAtTop = YES;
         self.initialYPosition = 0 - pullableViewFrame.size.height + self.overlayOffset + layoutMargins.top;
         
         self.restingBottomYPos = self.initialYPosition + pullableViewFrame.size.height - self.overlayOffset - layoutMargins.top;
@@ -116,22 +118,31 @@
             self.restingBottomYPos = self.controller.view.bounds.size.height - self.toolbarHeight -
                 pullableViewFrame.size.height - self.slideInset - notOpposingBarOffset;
         }
+        
+        if (!self.originatingAtTop) { // has been pulled down
+            pullableViewFrame.origin.y = self.restingBottomYPos;
+        } else {
+            pullableViewFrame.origin.y = self.initialYPosition;
+        }
     } else {
         
         if (self.opposingBar) {
             self.toolbarHeight = self.opposingBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height - layoutMargins.top;
-        }
-        
-        self.originatingAtTop = NO;
+        }        
         self.initialYPosition = self.controller.view.bounds.size.height - self.overlayOffset - layoutMargins.bottom;
         
         self.restingTopYPos = self.initialYPosition - pullableViewFrame.size.height + self.overlayOffset + layoutMargins.bottom;
         if (self.restingTopYPos < self.toolbarHeight + self.slideInset + layoutMargins.top) { // if pull up view is tall enough to conceal top bar...
             self.restingTopYPos = self.toolbarHeight + self.slideInset + layoutMargins.top; // ...dont let it overlap
         }
+        
+        if (self.originatingAtTop) { // has been pulled up
+            pullableViewFrame.origin.y = self.restingTopYPos;
+        } else {
+            pullableViewFrame.origin.y = self.initialYPosition;
+        }
     }
     
-    pullableViewFrame.origin.y = self.initialYPosition;
     self.frame = pullableViewFrame;
 }
 
