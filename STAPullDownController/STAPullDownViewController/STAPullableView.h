@@ -45,6 +45,10 @@
 @property (nonatomic, assign, readonly) CGFloat initialYPosition;
 @property (nonatomic, assign, readonly) CGFloat restingBottomYPos;
 @property (nonatomic, assign, readonly) CGFloat restingTopYPos;
+/**
+ The distance the view travels when moving to/from its resting position.
+ */
+@property (nonatomic, assign, readonly) CGFloat slideDistance;
 
 @property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
 @property (nonatomic, strong) UILongPressGestureRecognizer *holdGestureRecognizer;
