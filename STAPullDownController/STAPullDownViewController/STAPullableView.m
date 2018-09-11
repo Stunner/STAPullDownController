@@ -67,6 +67,18 @@
     }
 }
 
+#pragma mark - Getters
+
+- (CGFloat)slideDistance {
+    if (self.isPullDownView) {
+        return self.restingBottomYPos - self.initialYPosition;
+    } else {
+        return self.initialYPosition - self.restingTopYPos;
+    }
+}
+
+#pragma mark Setters
+
 - (void)setSlideInset:(CGFloat)slideInset {
     _slideInset = slideInset;
     if (self.setupComplete) {
@@ -78,6 +90,8 @@
     self.originatingAtTop = isPullDownView;
     _isPullDownView = isPullDownView;
 }
+
+#pragma mark -
 
 - (void)layoutMarginsDidChange {
     NSLog(@"%s", __PRETTY_FUNCTION__);
@@ -100,7 +114,9 @@
     }
     
     UIEdgeInsets layoutMargins = self.controller.view.window.layoutMargins;
-    
+    if (@available(iOS 11.0, *)) {
+        layoutMargins = UIApplication.sharedApplication.keyWindow.safeAreaInsets;
+    }
     if (self.isPullDownView) {
         
         if (self.opposingBar) {
