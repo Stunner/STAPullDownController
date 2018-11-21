@@ -8,7 +8,7 @@
 
 #import "STAPullableView.h"
 #import "STAPullDownViewController.h"
-#import "UIView+STAUtils.h"
+#import "Utility/UIView+STAUtils.h"
 
 @interface STAPullableView ()
 
