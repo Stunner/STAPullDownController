@@ -27,6 +27,10 @@
 //       Calc using [self.toolbar topmostEdge] and [self.toolbar bottommostEdge]
 @property (nonatomic, assign) CGFloat toolbarHeight;
 /**
+ Denotes if the pullable view is to conceal opposingBar.
+ */
+@property (nonatomic, assign) BOOL overlapsOpposingBar;
+/**
  Opposing tool bar or navigation bar. Used to determine toolbarHeight.
  */
 @property (nullable, nonatomic, weak) UIView *opposingBar;
@@ -41,6 +45,10 @@
 @property (nonatomic, assign) BOOL isMoving;
 @property (nonatomic, assign) BOOL isPullDownView;
 @property (nonatomic, assign) BOOL prevHasPassedAutoSlideThresholdValue;
+/**
+ Layout margins that override the window's layout margins.
+ */
+@property (nonatomic, assign) UIEdgeInsets overriddenLayoutMargins;
 
 @property (nonatomic, assign, readonly) CGFloat initialYPosition;
 @property (nonatomic, assign, readonly) CGFloat restingBottomYPos;

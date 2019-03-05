@@ -8,7 +8,7 @@
 
 #import "STAPullableView.h"
 #import "STAPullDownViewController.h"
-#import "Utility/UIView+STAUtils.h"
+#import "UIView+STAUtils.h"
 
 @interface STAPullableView ()
 
@@ -19,10 +19,18 @@
 @property (nonatomic, weak) STAPullDownViewController *controller;
 @property (nonatomic, assign) BOOL setupComplete;
 @property (nonatomic, assign) BOOL interactionOccurred;
+/**
+ Since there is no reliable way of determining if UIEdgeInsets has a null value.
+ Need to resort to keeping track of when this property is set, as UIEdgeInsetsZero
+ is a valid value.
+ */
+@property (nonatomic, assign) BOOL hasOverriddenLayoutMargins;
 
 @end
 
 @implementation STAPullableView
+
+#pragma mark - Initialization
 
 - (void)commonInit {
     self.toolbarHeight = 0;
@@ -53,6 +61,8 @@
     return self;
 }
 
+#pragma mark - UIKit Methods
+
 - (void)didMoveToSuperview {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
@@ -67,6 +77,12 @@
     }
 }
 
+- (void)layoutMarginsDidChange {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    [self setupFrame];
+}
+
 #pragma mark - Getters
 
 - (CGFloat)slideDistance {
@@ -77,7 +93,12 @@
     }
 }
 
-#pragma mark Setters
+#pragma mark - Setters
+
+- (void)setOverriddenLayoutMargins:(UIEdgeInsets)overriddenLayoutMargins {
+    self.hasOverriddenLayoutMargins = YES;
+    _overriddenLayoutMargins = overriddenLayoutMargins;
+}
 
 - (void)setSlideInset:(CGFloat)slideInset {
     _slideInset = slideInset;
@@ -87,17 +108,28 @@
 }
 
 - (void)setIsPullDownView:(BOOL)isPullDownView {
-    self.originatingAtTop = isPullDownView;
+    _originatingAtTop = isPullDownView;
     _isPullDownView = isPullDownView;
 }
 
-#pragma mark -
-
-- (void)layoutMarginsDidChange {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-    
-    
+- (void)setOriginatingAtTop:(BOOL)originatingAtTop {
+    _originatingAtTop = originatingAtTop;
+    if (self.isPullDownView) {
+        if (originatingAtTop) {
+            [self addGestureRecognizer:self.holdGestureRecognizer];
+        } else {
+            [self removeGestureRecognizer:self.holdGestureRecognizer];
+        }
+    } else {
+        if (originatingAtTop) {
+            [self removeGestureRecognizer:self.holdGestureRecognizer];
+        } else {
+            [self addGestureRecognizer:self.holdGestureRecognizer];
+        }
+    }
 }
+
+#pragma mark - Public Methods
 
 - (void)setupFrame {
     NSLog(@"%s", __PRETTY_FUNCTION__);
@@ -113,7 +145,8 @@
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     }
     
-    UIEdgeInsets layoutMargins = self.controller.view.window.layoutMargins;
+    UIEdgeInsets layoutMargins = self.hasOverriddenLayoutMargins ?
+        self.overriddenLayoutMargins : self.controller.view.window.layoutMargins;
     if (@available(iOS 11.0, *)) {
         layoutMargins = UIApplication.sharedApplication.keyWindow.safeAreaInsets;
     }
@@ -130,9 +163,15 @@
         if (self.restingBottomYPos + pullableViewFrame.size.height >
             self.controller.view.frame.size.height - self.toolbarHeight - self.slideInset - notOpposingBarOffset)
         {
-            // ...dont let it overlap
-            self.restingBottomYPos = self.controller.view.bounds.size.height - self.toolbarHeight -
-                pullableViewFrame.size.height - self.slideInset - notOpposingBarOffset;
+            if (self.overlapsOpposingBar) {
+                // ...let it overlap
+                self.restingBottomYPos = self.controller.view.bounds.size.height -
+                    pullableViewFrame.size.height - self.slideInset - notOpposingBarOffset;
+            } else {
+                // ...don't let it overlap
+                self.restingBottomYPos = self.controller.view.bounds.size.height - self.toolbarHeight -
+                    pullableViewFrame.size.height - self.slideInset - notOpposingBarOffset;
+            }
         }
         
         if (!self.originatingAtTop) { // has been pulled down
@@ -144,12 +183,16 @@
         
         if (self.opposingBar) {
             self.toolbarHeight = self.opposingBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height - layoutMargins.top;
-        }        
+        }
         self.initialYPosition = self.controller.view.bounds.size.height - self.overlayOffset - layoutMargins.bottom;
         
         self.restingTopYPos = self.initialYPosition - pullableViewFrame.size.height + self.overlayOffset + layoutMargins.bottom;
         if (self.restingTopYPos < self.toolbarHeight + self.slideInset + layoutMargins.top) { // if pull up view is tall enough to conceal top bar...
-            self.restingTopYPos = self.toolbarHeight + self.slideInset + layoutMargins.top; // ...dont let it overlap
+            if (self.overlapsOpposingBar) {
+                self.restingTopYPos = self.slideInset + layoutMargins.top; // ...let it overlap
+            } else {
+                self.restingTopYPos = self.toolbarHeight + self.slideInset + layoutMargins.top; // ...don't let it overlap
+            }
         }
         
         if (self.originatingAtTop) { // has been pulled up
@@ -178,15 +221,12 @@
     self.panGestureRecognizer.delegate = controller;
     [self addGestureRecognizer:self.panGestureRecognizer];
     
+    [self setupView];
     self.setupComplete = YES;
 }
 
 - (void)setupView {
     // empty method meant to be subclassed
-}
-
-- (void)userInteractionOccurred {
-    self.interactionOccurred = YES;
 }
 
 - (void)toggleView {
@@ -297,6 +337,12 @@
     if ([self.delegate respondsToSelector:@selector(view:reachedBottom:)]) {
         [self.delegate view:self reachedBottom:self.frame.origin.y];
     }
+}
+
+#pragma mark - Helper Methods
+
+- (void)userInteractionOccurred {
+    self.interactionOccurred = YES;
 }
 
 @end
